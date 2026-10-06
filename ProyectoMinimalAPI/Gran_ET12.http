@@ -1,0 +1,6 @@
+@ProyectoMinimalAPI_HostAddress = http://localhost:6767
+
+GET {{ProyectoMinimalAPI_HostAddress}}/api/controllerjugador/
+Accept: application/json
+
+###

@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="ProyectoCore/src/ProyectoCore.csproj" />
+    <Project Path="ProyectoMinimalAPI/Gran_ET12.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="ProyectoCore/test/ProyectoCoreTest.csproj" />
+  </Folder>
+</Solution>
