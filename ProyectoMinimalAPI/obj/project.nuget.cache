@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "3xPgp+l2gMLvGaAfehgbdK/DdHr2PvtaXj3MD9wzd5U6O0Qb5WRJXRD80f4ChXSgV9fQKm5W+k4hL8XwhO4wig==",
+  "success": true,
+  "projectFilePath": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoMinimalAPI/Gran_ET12.csproj",
+  "expectedPackageFiles": [
+    "/home/et12alumno/.nuget/packages/dapper/2.1.35/dapper.2.1.35.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.1/microsoft.extensions.logging.abstractions.7.0.1.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/mysqlconnector/2.3.7/mysqlconnector.2.3.7.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/scalar.aspnetcore/1.2.37/scalar.aspnetcore.1.2.37.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.5.0/swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "/home/et12alumno/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}

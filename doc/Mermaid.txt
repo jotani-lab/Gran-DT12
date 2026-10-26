@@ -1,0 +1,9 @@
+erDiagram
+    POSICIONES ||--o{ JUGADORES : posee
+    EQUIPOS ||--o{ JUGADORES : pertenece
+    USUARIOS ||--o| PLANTILLAS : posee
+    PLANTILLAS ||--|{ PLANTILLA_TITULARES : incluye
+    PLANTILLAS ||--|{ PLANTILLA_SUPLENTES : incluye
+    JUGADORES ||--|{ PLANTILLA_TITULARES : es_titular
+    JUGADORES ||--|{ PLANTILLA_SUPLENTES : es_suplente
+    JUGADORES ||--o{ PUNTUACIONES : recibe
