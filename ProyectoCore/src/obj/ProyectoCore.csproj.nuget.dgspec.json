@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/ProyectoCore.csproj": {}
+    "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj": {}
   },
   "projects": {
-    "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/ProyectoCore.csproj": {
+    "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/ProyectoCore.csproj",
+        "projectUniqueName": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj",
         "projectName": "ProyectoCore",
-        "projectPath": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/ProyectoCore.csproj",
+        "projectPath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj",
         "packagesPath": "/home/et12alumno/.nuget/packages/",
-        "outputPath": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/obj/",
+        "outputPath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/et12alumno/.nuget/NuGet/NuGet.Config"
@@ -20,6 +20,7 @@
           "net8.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,7 +33,13 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -63,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.126/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.109/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

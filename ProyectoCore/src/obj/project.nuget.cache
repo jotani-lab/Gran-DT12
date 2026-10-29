@@ -1,12 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "zK8oHcLi76Ybob2Qs80TQJjmzAZLjXarK0qG8UJAzXs1urQQ9bAAe8N7nNRnaKGA1L3/kluvznumC2sZBmyGGQ==",
+  "dgSpecHash": "N15iKzAWzzo=",
   "success": true,
-  "projectFilePath": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/src/ProyectoCore.csproj",
+  "projectFilePath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj",
   "expectedPackageFiles": [
     "/home/et12alumno/.nuget/packages/dapper/2.1.35/dapper.2.1.35.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.1/microsoft.extensions.logging.abstractions.7.0.1.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/mysqlconnector/2.3.7/mysqlconnector.2.3.7.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "El paquete \"MySqlConnector\" 2.3.7 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-473q-m89c-ghf8",
+      "projectPath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj",
+      "warningLevel": 1,
+      "filePath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/src/ProyectoCore.csproj",
+      "libraryId": "MySqlConnector",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

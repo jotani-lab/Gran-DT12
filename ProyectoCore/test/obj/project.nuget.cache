@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SWJAATYkfjLvKEc70V5rafJgKYh9ijWaJJRxaiPDE93ke0GJ6y4arsxGmf8KP10K3ySNdP2IcDSJyTRv7GjGsA==",
+  "dgSpecHash": "yn1xcJh9pII=",
   "success": true,
-  "projectFilePath": "/home/et12alumno/Escritorio/Gran-DT12-main/ProyectoCore/test/ProyectoCoreTest.csproj",
+  "projectFilePath": "/mnt/Datos/Repos/Gran-DT12/ProyectoCore/test/ProyectoCoreTest.csproj",
   "expectedPackageFiles": [
     "/home/et12alumno/.nuget/packages/castle.core/5.2.1/castle.core.5.2.1.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/dapper/2.1.35/dapper.2.1.35.nupkg.sha512",
