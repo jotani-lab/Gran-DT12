@@ -33,6 +33,7 @@ public class Jugador
         Puntuaciones.Add(puntuacion);
     }
 
+    //TODO a capa de servicio del Jugador
     public bool Verificar()
     {
         if (string.IsNullOrWhiteSpace(Nombre))

@@ -29,6 +29,7 @@ public class Puntuacion
         }
     }
 
+//TODO a capa de servicio
     public bool Verificar()
     {
         if (JugadorId <= 0)

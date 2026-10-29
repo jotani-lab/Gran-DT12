@@ -8,6 +8,7 @@ public class Plantilla
     public decimal PresupuestoMaximo { get; set; } = 100000000.00m;
     public int CantidadMaximaJugadores { get; set; } = 20;
 
+    //TODO a capa de servicio Repensar dejar una clase de Plantilla o usar futbolista
     public List<PlantillaTitular> Titulares { get; set; } = new();
     public List<PlantillaSuplente> Suplentes { get; set; } = new();
 
@@ -16,6 +17,7 @@ public class Plantilla
         decimal total = 0m;
         foreach (var t in Titulares) if (t.Jugador != null) total += t.Jugador.Cotizacion;
         foreach (var s in Suplentes) if (s.Jugador != null) total += s.Jugador.Cotizacion;
+        
         return total;
     }
 
@@ -39,6 +41,7 @@ public class Plantilla
 
     public decimal PuntajeFecha(int nroFecha)
     {
+        //TODO a capa de servicio
         if (nroFecha <= 0 || nroFecha >= 50)
             throw new ArgumentOutOfRangeException(nameof(nroFecha), "Número de fecha inválido.");
 
@@ -54,6 +57,7 @@ public class Plantilla
         return total;
     }
 
+//TODO a capa de servicio
     public bool Verificar()
     {
         if (UsuarioId <= 0)

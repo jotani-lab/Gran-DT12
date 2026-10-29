@@ -26,6 +26,7 @@ public class Usuario
         PasswordHash = builder.ToString();
     }
 
+    //TODO Cambiar esto a su  capa de servicio
     public bool ValidarPassword(string rawPassword)
     {
         if (string.IsNullOrWhiteSpace(rawPassword)) return false;
