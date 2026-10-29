@@ -6,6 +6,7 @@ public class PlantillaSuplente
     public int JugadorId { get; set; }
     public Jugador? Jugador { get; set; }
 
+//TODO pasar a service
     public bool Verificar()
     {
         if (PlantillaId <= 0)
