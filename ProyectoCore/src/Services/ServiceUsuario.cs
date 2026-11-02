@@ -32,7 +32,7 @@ public class ServiceUsuario
         return passwordHash.Equals(builder.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
-    public bool Verificar(string nombre, string apellido, string email, DateOnly fechaNacimiento, string passwordHash)
+    public bool Verificar(string nombre, string apellido, string email, DateTime fechaNacimiento, string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(nombre))
             return false;
@@ -44,8 +44,8 @@ public class ServiceUsuario
         if (apellido.Length > 100)
             return false;
 
-        if (fechaNacimiento == default || fechaNacimiento == DateOnly.MinValue)
-        return false;
+        if (fechaNacimiento == default || fechaNacimiento == DateTime.MinValue)
+            return false;
 
         if (string.IsNullOrWhiteSpace(email))
             return false;

@@ -27,7 +27,7 @@ public class JugadorController : ControllerBase
         [FromQuery] string apellido,
         [FromQuery] string apodo,
         [FromQuery] int equipoId,
-        [FromQuery] DateOnly fechaNacimiento,
+        [FromQuery] DateTime fechaNacimiento,
         [FromQuery] int posicionId,
         [FromQuery] decimal cotizacion)
     {
