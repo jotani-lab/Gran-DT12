@@ -9,7 +9,11 @@ namespace ProyectoMinimalAPI.Controllers;
 public class EquipoController : ControllerBase
 {
     private readonly ServiceEquipo _service;
-    public EquipoController(ServiceEquipo service) { _service = service; }
+
+    public EquipoController(ServiceEquipo service)
+    {
+        _service = service ?? throw new ArgumentNullException(nameof(service));
+    }
 
     [HttpGet]
     public IActionResult Get() => Ok(_service.ObtenerTodos());
@@ -21,11 +25,23 @@ public class EquipoController : ControllerBase
         return res == null ? NotFound() : Ok(res);
     }
 
+    [HttpPost("verificar")]
+    public IActionResult Verificar([FromBody] string nombre)
+    {
+        if (string.IsNullOrWhiteSpace(nombre))
+            return BadRequest(new { error = "El nombre del equipo es obligatorio." });
+
+        return Ok(_service.Verificar(nombre));
+    }
+
     [HttpPost]
     public IActionResult Create([FromBody] Equipo equipo)
     {
         try
         {
+            if (!_service.Verificar(equipo?.Nombre ?? string.Empty))
+                return BadRequest(new { error = "El nombre del equipo no es válido." });
+
             int id = _service.Crear(equipo);
             return CreatedAtAction(nameof(GetById), new { id }, equipo);
         }

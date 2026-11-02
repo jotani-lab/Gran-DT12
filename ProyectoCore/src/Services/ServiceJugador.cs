@@ -8,6 +8,37 @@ public class ServiceJugador
     private readonly IRepoJugador _repo;
     public ServiceJugador(IRepoJugador repo) { _repo = repo; }
 
+    //TO DO implementar esto en el controller de jugador
+    public bool Verificar(string nombre, string apellido, string apodo, int equipoId, DateOnly fechaNacimiento, int posicionId, decimal cotizacion)
+    {
+        if (string.IsNullOrWhiteSpace(nombre))
+            return false;
+        if (nombre.Length > 100)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(apellido))
+            return false;
+        if (apellido.Length > 100)
+            return false;
+
+        if (apodo.Length > 100)
+            return false;
+
+        if (fechaNacimiento == default || fechaNacimiento == DateOnly.MinValue)
+        return false;
+
+        if (equipoId <= 0)
+            return false;
+
+        if (posicionId <= 0)
+            return false;
+
+        if (cotizacion < 0 || cotizacion > 99999999.99m)
+            return false;
+
+        return true;
+    }
+
     public List<Jugador> ObtenerTodos() => _repo.ObtenerTodos();
     public Jugador? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
 
@@ -21,4 +52,5 @@ public class ServiceJugador
 
         return _repo.Crear(jugador);
     }
+    
 }

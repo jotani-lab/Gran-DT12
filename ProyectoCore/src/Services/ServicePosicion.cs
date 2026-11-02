@@ -24,15 +24,5 @@ public class ServicePosicion
         return _repo.ObtenerPorId(id);
     }
 
-    public void Crear(Posicion posicion)
-    {
-        if (posicion is null)
-            throw new ArgumentNullException(nameof(posicion));
 
-        if (!posicion.Verificar())
-            throw new ArgumentException("La posición no es válida.", nameof(posicion));
-
-        // La interfaz actual no expone un método de creación.
-        // Si luego agregas Create/Insert en IRepoPosicion, se implementa aquí.
-    }
 }

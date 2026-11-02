@@ -39,42 +39,5 @@ public class Plantilla
 
     public bool EsValida() => EsPresupuestoValido() && EsCantidadJugadoresValida() && EsValidaFormacionTitular();
 
-    public decimal PuntajeFecha(int nroFecha)
-    {
-        //TODO a capa de servicio
-        if (nroFecha <= 0 || nroFecha >= 50)
-            throw new ArgumentOutOfRangeException(nameof(nroFecha), "Número de fecha inválido.");
-
-        decimal total = 0m;
-        foreach (var t in Titulares)
-        {
-            if (t.Jugador != null)
-            {
-                var p = t.Jugador.Puntuaciones.FirstOrDefault(x => x.NroFecha == nroFecha);
-                if (p != null) total += p.Nota;
-            }
-        }
-        return total;
-    }
-
-//TODO a capa de servicio
-    public bool Verificar()
-    {
-        if (UsuarioId <= 0)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(Nombre))
-            return false;
-
-        if (PresupuestoMaximo <= 0)
-            return false;
-        
-        if (PresupuestoMaximo > 100000000.00m)
-            return false;
-
-        if (CantidadMaximaJugadores != 20)
-            return false;
-
-        return true;
-    }
+    public decimal PresupuestoRestante() => PresupuestoMaximo - PresupuestoConsumido();
 }

@@ -7,14 +7,5 @@ public class PlantillaSuplente
     public Jugador? Jugador { get; set; }
 
 //TODO pasar a service
-    public bool Verificar()
-    {
-        if (PlantillaId <= 0)
-            return false;
-
-        if (JugadorId <= 0)
-            return false;
-
-        return true;
-    }
+    
 }

@@ -12,12 +12,20 @@ public class ServicePuntuacion
         _repo = repo;
     }
 
+    public bool Verificar(Puntuacion puntuacion)
+    {
+        if (puntuacion is null)
+            throw new ArgumentNullException(nameof(puntuacion));
+
+        return puntuacion.Verificar();
+    }
+
     public bool RegistrarPuntuacion(Puntuacion puntuacion)
     {
         if (puntuacion is null)
             throw new ArgumentNullException(nameof(puntuacion));
 
-        if (!puntuacion.Verificar())
+        if (!Verificar(puntuacion))
             throw new ArgumentException("La puntuación no es válida.", nameof(puntuacion));
 
         return _repo.RegistrarPuntuacion(puntuacion);

@@ -29,7 +29,7 @@ public class Puntuacion
         }
     }
 
-//TODO a capa de servicio
+    //VER SI FUNCIONA ESTO, SINO SE PUEDE HACER EN EL SERVICE
     public bool Verificar()
     {
         if (JugadorId <= 0)

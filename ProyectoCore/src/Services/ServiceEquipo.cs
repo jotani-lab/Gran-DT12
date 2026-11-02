@@ -14,6 +14,18 @@ public class ServiceEquipo
         _repo = repo ?? throw new ArgumentNullException(nameof(repo));
     }
 
+    //TO DO implementar esto en el controller de jugador
+
+    public bool Verificar(string nombre)
+        {        
+            if (string.IsNullOrWhiteSpace(nombre))
+                return false;
+
+            if (nombre.Length > 100)
+                return false;
+
+            return true;
+        }
     public List<Equipo> ObtenerTodos() => _repo.ObtenerTodos();
 
     public Equipo? ObtenerPorId(int id)
@@ -23,6 +35,8 @@ public class ServiceEquipo
 
         return _repo.ObtenerPorId(id);
     }
+
+    
 
     public int Crear(Equipo equipo)
     {

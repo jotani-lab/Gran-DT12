@@ -6,7 +6,7 @@ public class Jugador
     public string Nombre { get; set; } = string.Empty;
     public string Apellido { get; set; } = string.Empty;
     public string? Apodo { get; set; }
-    public DateTime FechaNacimiento { get; set; }
+    public DateOnly FechaNacimiento { get; set; }
     public int EquipoId { get; set; }
     public Equipo? Equipo { get; set; }
     public int PosicionId { get; set; }
@@ -33,24 +33,5 @@ public class Jugador
         Puntuaciones.Add(puntuacion);
     }
 
-    //TODO a capa de servicio del Jugador
-    public bool Verificar()
-    {
-        if (string.IsNullOrWhiteSpace(Nombre))
-            return false;
-
-        if (string.IsNullOrWhiteSpace(Apellido))
-            return false;
-
-        if (EquipoId <= 0)
-            return false;
-
-        if (PosicionId <= 0)
-            return false;
-
-        if (Cotizacion < 0 || Cotizacion > 99999999.99m)
-            return false;
-
-        return true;
-    }
+    
 }
