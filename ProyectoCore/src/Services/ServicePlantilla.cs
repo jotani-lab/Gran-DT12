@@ -30,6 +30,34 @@ public class ServicePlantilla
         return true;
     }
 
+    public List<PlantillaTitular> Titulares { get; set; } = new();
+    public List<PlantillaSuplente> Suplentes { get; set; } = new();
+
+    public bool EsValidaFormacionTitular()
+    {
+        if (Titulares.Count != 11) return false;
+
+        int arqueros = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 1);
+        int defensores = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 2);
+        int mediocampistas = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 3);
+        int delanteros = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 4);
+
+        return arqueros == 1 && defensores == 4 && mediocampistas == 4 && delanteros == 2;
+    }
+
+    public decimal PresupuestoConsumido()
+    {
+        decimal total = 0m;
+        foreach (var t in Titulares) if (t.Jugador != null) total += t.Jugador.Cotizacion;
+        foreach (var s in Suplentes) if (s.Jugador != null) total += s.Jugador.Cotizacion;
+        
+        return total;
+    }
+
+    public bool EsPresupuestoValido(decimal presupuestoMaximo) => PresupuestoConsumido() <= presupuestoMaximo;
+    public bool EsCantidadJugadoresValida(int cantidadMaximaJugadores) => (Titulares.Count + Suplentes.Count) <= cantidadMaximaJugadores;
+    public decimal PresupuestoRestante(decimal presupuestoMaximo) => presupuestoMaximo - PresupuestoConsumido();
+
     public decimal PuntajeFecha(Plantilla plantilla, int nroFecha)
     {
         if (plantilla is null)
@@ -39,7 +67,7 @@ public class ServicePlantilla
             throw new ArgumentOutOfRangeException(nameof(nroFecha), "Número de fecha inválido.");
 
         decimal total = 0m;
-        foreach (var t in plantilla.Titulares)
+        foreach (var t in Titulares)
         {
             if (t.Jugador != null)
             {
