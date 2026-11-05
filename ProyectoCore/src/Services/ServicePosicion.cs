@@ -20,7 +20,8 @@ public class ServicePosicion
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "El id de la posición debe ser mayor que cero.");
-
+        if (id >= 5)
+            throw new ArgumentOutOfRangeException(nameof(id),"El id de la posicion debe ser menor a 5");
         return _repo.ObtenerPorId(id);
     }
 

@@ -16,7 +16,14 @@ public class PosicionController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var res = _service.ObtenerPorId(id);
-        return res == null ? NotFound() : Ok(res);
+        try
+        {
+            var res = _service.ObtenerPorId(id);
+            return res == null ? NotFound() : Ok(res);
+        }
+        catch (ArgumentException a)
+        {
+            return BadRequest(a.Message);
+        }
     }
 }
