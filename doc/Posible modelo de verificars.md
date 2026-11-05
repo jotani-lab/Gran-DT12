@@ -23,3 +23,33 @@ public **List<string> Validar(Plantilla plantilla)**
 
     return errores;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+plagio
+
+private static void ValidarEquipo(Equipo equipo)
+    {
+        if (equipo is null)
+            throw new ArgumentNullException(nameof(equipo));
+
+        if (string.IsNullOrWhiteSpace(equipo.Nombre))
+            throw new ArgumentException("El nombre del equipo es obligatorio.", nameof(equipo));
+
+        if (equipo.Nombre.Trim().Length < 2)
+            throw new ArgumentException("El nombre del equipo debe tener al menos 2 caracteres.", nameof(equipo));
+    }

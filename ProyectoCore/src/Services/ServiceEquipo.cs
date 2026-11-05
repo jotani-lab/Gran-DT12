@@ -13,19 +13,20 @@ public class ServiceEquipo
     {
         _repo = repo ?? throw new ArgumentNullException(nameof(repo));
     }
-
-    //TO DO implementar esto en el controller de jugador
-
-    public bool Verificar(string nombre)
+    public bool Verificar(Equipo equipo)
         {        
-            if (string.IsNullOrWhiteSpace(nombre))
+            if (string.IsNullOrWhiteSpace(equipo.Nombre))
                 return false;
 
-            if (nombre.Length > 100)
+            if (equipo.Nombre.Length > 100)
+                return false;
+            
+            if (equipo.Nombre.Length <= 2)
                 return false;
 
             return true;
         }
+    
     public List<Equipo> ObtenerTodos() => _repo.ObtenerTodos();
 
     public Equipo? ObtenerPorId(int id)
@@ -40,19 +41,10 @@ public class ServiceEquipo
 
     public int Crear(Equipo equipo)
     {
-        ValidarEquipo(equipo);
+        Verificar(equipo);
         return _repo.Crear(equipo);
     }
-
-    private static void ValidarEquipo(Equipo equipo)
-    {
-        if (equipo is null)
-            throw new ArgumentNullException(nameof(equipo));
-
-        if (string.IsNullOrWhiteSpace(equipo.Nombre))
-            throw new ArgumentException("El nombre del equipo es obligatorio.", nameof(equipo));
-
-        if (equipo.Nombre.Trim().Length < 2)
-            throw new ArgumentException("El nombre del equipo debe tener al menos 2 caracteres.", nameof(equipo));
-    }
+        
+        
+        
 }

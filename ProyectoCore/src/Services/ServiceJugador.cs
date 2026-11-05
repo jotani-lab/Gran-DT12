@@ -9,7 +9,7 @@ public class ServiceJugador
     public ServiceJugador(IRepoJugador repo) { _repo = repo; }
 
     //TO DO implementar esto en el controller de jugador
-public bool Verificar(string nombre, string apellido, string apodo, int equipoId, DateTime fechaNacimiento, int posicionId, decimal cotizacion)
+    public bool Verificar(string nombre, string apellido, string apodo, int equipoId, DateTime fechaNacimiento, int posicionId, decimal cotizacion)
     {
         if (string.IsNullOrWhiteSpace(nombre))
             return false;
@@ -31,6 +31,8 @@ public bool Verificar(string nombre, string apellido, string apodo, int equipoId
             return false;
 
         if (posicionId <= 0)
+            return false;
+        if (posicionId > 4)
             return false;
 
         if (cotizacion < 0 || cotizacion > 99999999.99m)
