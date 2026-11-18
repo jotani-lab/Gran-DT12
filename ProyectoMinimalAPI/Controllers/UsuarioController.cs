@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
 
@@ -11,29 +12,21 @@ public class UsuarioController : ControllerBase
     private readonly ServiceUsuario _service;
     public UsuarioController(ServiceUsuario service) { _service = service; }
 
-    public class LoginRequest
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-
-    public class RegistroRequest
-    {
-        public string Nombre { get; set; } = string.Empty;
-        public string Apellido { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public DateTime FechaNacimiento { get; set; }
-        public string Password { get; set; } = string.Empty;
-    }
-
     [HttpPost("verificar")]
     public IActionResult Verificar([FromBody] RegistroRequest req)
     {
         if (req == null)
-            return BadRequest(new { error = "Los datos del usuario son obligatorios." });
+            return BadRequest(new { errores = new[] { "Los datos del usuario son obligatorios." } });
 
-        string passwordHash = _service.EstablecerPassword(req.Password);
-        return Ok(_service.Verificar(req.Nombre, req.Apellido, req.Email, req.FechaNacimiento, passwordHash));
+        var usuario = new Usuario
+        {
+            Nombre = req.Nombre,
+            Apellido = req.Apellido,
+            Email = req.Email,
+            FechaNacimiento = req.FechaNacimiento
+        };
+
+        return Ok(_service.Validar(usuario, req.Password));
     }
 
     [HttpPost("login")]
@@ -49,7 +42,7 @@ public class UsuarioController : ControllerBase
     {
         try
         {
-            var u = new Usuario
+            var usuario = new Usuario
             {
                 Nombre = req.Nombre,
                 Apellido = req.Apellido,
@@ -57,11 +50,11 @@ public class UsuarioController : ControllerBase
                 FechaNacimiento = req.FechaNacimiento
             };
 
-            string passwordHash = _service.EstablecerPassword(req.Password);
-            if (!_service.Verificar(req.Nombre, req.Apellido, req.Email, req.FechaNacimiento, passwordHash))
-                return BadRequest(new { error = "Los datos del usuario no son válidos." });
+            var errores = _service.Validar(usuario, req.Password);
+            if (errores.Count > 0)
+                return BadRequest(new { errores });
 
-            int id = _service.Registrar(u, req.Password);
+            int id = _service.Registrar(usuario, req.Password);
             return Ok(new { id, message = "Usuario registrado correctamente." });
         }
         catch (Exception ex)

@@ -28,10 +28,7 @@ public class PuntuacionController : ControllerBase
     [HttpPost("verificar")]
     public IActionResult Verificar([FromBody] Puntuacion puntuacion)
     {
-        if (puntuacion == null)
-            return BadRequest(new { error = "La puntuación es obligatoria." });
-
-        return Ok(_service.Verificar(puntuacion));
+        return Ok(_service.Validar(puntuacion));
     }
 
     [HttpPost]
@@ -39,8 +36,9 @@ public class PuntuacionController : ControllerBase
     {
         try
         {
-            if (!_service.Verificar(puntuacion))
-                return BadRequest(new { error = "La puntuación no es válida." });
+            var errores = _service.Validar(puntuacion);
+            if (errores.Count > 0)
+                return BadRequest(new { errores });
 
             bool ok = _service.RegistrarPuntuacion(puntuacion);
             return ok ? Ok(new { message = "Puntuación registrada con éxito." }) : BadRequest();

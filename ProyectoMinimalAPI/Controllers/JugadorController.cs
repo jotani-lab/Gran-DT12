@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
 
@@ -21,35 +22,22 @@ public class JugadorController : ControllerBase
         return res == null ? NotFound() : Ok(res);
     }
 
-    [HttpGet("verificar")]
-    public IActionResult Verificar(
-        [FromQuery] string nombre,
-        [FromQuery] string apellido,
-        [FromQuery] string apodo,
-        [FromQuery] int equipoId,
-        [FromQuery] DateTime fechaNacimiento,
-        [FromQuery] int posicionId,
-        [FromQuery] decimal cotizacion)
+    [HttpPost("verificar")]
+    public IActionResult Verificar([FromBody] CrearJugadorRequest request)
     {
-        return Ok(_service.Verificar(nombre, apellido, apodo, equipoId, fechaNacimiento, posicionId, cotizacion));
+        var jugador = CrearEntidad(request);
+        return Ok(_service.Validar(jugador));
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Jugador jugador)
+    public IActionResult Create([FromBody] CrearJugadorRequest request)
     {
         try
         {
-            if (!_service.Verificar(
-                jugador.Nombre,
-                jugador.Apellido,
-                jugador.Apodo,
-                jugador.EquipoId,
-                jugador.FechaNacimiento,
-                jugador.PosicionId,
-                jugador.Cotizacion))
-            {
-                return BadRequest(new { error = "Los datos del jugador no son válidos." });
-            }
+            var jugador = CrearEntidad(request);
+            var errores = _service.Validar(jugador);
+            if (errores.Count > 0)
+                return BadRequest(new { errores });
 
             int id = _service.Crear(jugador);
             return CreatedAtAction(nameof(GetById), new { id }, jugador);
@@ -58,5 +46,19 @@ public class JugadorController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+    private static Jugador CrearEntidad(CrearJugadorRequest request)
+    {
+        return new Jugador
+        {
+            Nombre = request.Nombre,
+            Apellido = request.Apellido,
+            Apodo = request.Apodo,
+            FechaNacimiento = request.FechaNacimiento,
+            EquipoId = request.EquipoId,
+            PosicionId = request.PosicionId,
+            Cotizacion = request.Cotizacion
+        };
     }
 }

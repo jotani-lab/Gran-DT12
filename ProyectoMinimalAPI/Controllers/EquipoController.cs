@@ -25,13 +25,20 @@ public class EquipoController : ControllerBase
         return res == null ? BadRequest() : Ok(res);
     }
 
+    [HttpPost("verificar")]
+    public IActionResult Verificar([FromBody] Equipo equipo)
+    {
+        return Ok(_service.Validar(equipo));
+    }
+
     [HttpPost]
     public IActionResult Create([FromBody] Equipo equipo)
     {
         try
         {
-            if (!_service.Verificar(equipo))
-                return BadRequest(new { error = "El nombre del equipo no es válido." });
+            var errores = _service.Validar(equipo);
+            if (errores.Count > 0)
+                return BadRequest(new { errores });
 
             int id = _service.Crear(equipo);
             return CreatedAtAction(nameof(GetById), new { id }, equipo);
@@ -40,7 +47,5 @@ public class EquipoController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
-
-
     }
 }

@@ -12,21 +12,33 @@ public class ServicePuntuacion
         _repo = repo;
     }
 
-    public bool Verificar(Puntuacion puntuacion)
+    public List<string> Validar(Puntuacion puntuacion)
     {
-        if (puntuacion is null)
-            throw new ArgumentNullException(nameof(puntuacion));
+        var errores = new List<string>();
 
-        return puntuacion.Verificar();
+        if (puntuacion is null)
+        {
+            errores.Add("Se debe ingresar una puntuación.");
+            return errores;
+        }
+
+        if (puntuacion.JugadorId <= 0)
+            errores.Add("El jugador no es válido.");
+
+        if (puntuacion.NroFecha <= 0 || puntuacion.NroFecha >= 50)
+            errores.Add("El número de fecha debe estar entre 1 y 49.");
+
+        if (puntuacion.Nota < 1.0m || puntuacion.Nota > 10.0m)
+            errores.Add("La nota debe estar entre 1.0 y 10.0.");
+
+        return errores;
     }
 
     public bool RegistrarPuntuacion(Puntuacion puntuacion)
     {
-        if (puntuacion is null)
-            throw new ArgumentNullException(nameof(puntuacion));
-
-        if (!Verificar(puntuacion))
-            throw new ArgumentException("La puntuación no es válida.", nameof(puntuacion));
+        var errores = Validar(puntuacion);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores), nameof(puntuacion));
 
         return _repo.RegistrarPuntuacion(puntuacion);
     }

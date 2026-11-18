@@ -10,24 +10,31 @@ public class ServicePlantilla
     private readonly IRepoPlantilla _repo;
     public ServicePlantilla(IRepoPlantilla repo) { _repo = repo; }
 
-    public bool Verificar(Plantilla plantilla)
+    public List<string> Validar(Plantilla plantilla)
     {
+        var errores = new List<string>();
+
         if (plantilla is null)
-            throw new ArgumentNullException(nameof(plantilla));
+        {
+            errores.Add("Se debe ingresar una plantilla.");
+            return errores;
+        }
 
         if (plantilla.UsuarioId <= 0)
-            return false;
+            errores.Add("El usuario no es válido.");
 
         if (string.IsNullOrWhiteSpace(plantilla.Nombre))
-            return false;
+            errores.Add("El nombre de la plantilla es obligatorio.");
 
-        if (plantilla.PresupuestoMaximo <= 0 || plantilla.PresupuestoMaximo > 100000000.00m)
-            return false;
+        if (plantilla.PresupuestoMaximo <= 0)
+            errores.Add("El presupuesto debe ser mayor que cero.");
+        else if (plantilla.PresupuestoMaximo > 100000000.00m)
+            errores.Add("El presupuesto no puede superar $100.000.000.");
 
         if (plantilla.CantidadMaximaJugadores != 20)
-            return false;
+            errores.Add("La cantidad máxima de jugadores debe ser 20.");
 
-        return true;
+        return errores;
     }
 
     public List<PlantillaTitular> Titulares { get; set; } = new();
@@ -50,7 +57,6 @@ public class ServicePlantilla
         decimal total = 0m;
         foreach (var t in Titulares) if (t.Jugador != null) total += t.Jugador.Cotizacion;
         foreach (var s in Suplentes) if (s.Jugador != null) total += s.Jugador.Cotizacion;
-        
         return total;
     }
 
@@ -84,11 +90,9 @@ public class ServicePlantilla
 
     public int Crear(Plantilla plantilla)
     {
-        if (plantilla is null)
-            throw new ArgumentNullException(nameof(plantilla));
-
-        if (!Verificar(plantilla))
-            throw new ArgumentException("La plantilla no es válida.", nameof(plantilla));
+        var errores = Validar(plantilla);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores), nameof(plantilla));
 
         return _repo.Crear(plantilla);
     }

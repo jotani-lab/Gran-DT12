@@ -10,6 +10,39 @@ public class ServiceUsuario
     private readonly IRepoUsuario _repo;
     public ServiceUsuario(IRepoUsuario repo) { _repo = repo; }
 
+    public List<string> Validar(Usuario usuario, string rawPassword)
+    {
+        var errores = new List<string>();
+
+        if (usuario is null)
+        {
+            errores.Add("Se debe ingresar un usuario.");
+            return errores;
+        }
+
+        if (string.IsNullOrWhiteSpace(usuario.Nombre))
+            errores.Add("El nombre es obligatorio.");
+        else if (usuario.Nombre.Length > 100)
+            errores.Add("El nombre no puede superar los 100 caracteres.");
+
+        if (string.IsNullOrWhiteSpace(usuario.Apellido))
+            errores.Add("El apellido es obligatorio.");
+        else if (usuario.Apellido.Length > 100)
+            errores.Add("El apellido no puede superar los 100 caracteres.");
+
+        if (usuario.FechaNacimiento == default || usuario.FechaNacimiento == DateTime.MinValue)
+            errores.Add("La fecha de nacimiento no es válida.");
+
+        if (string.IsNullOrWhiteSpace(usuario.Email))
+            errores.Add("El email es obligatorio.");
+        else if (usuario.Email.Length > 150)
+            errores.Add("El email no puede superar los 150 caracteres.");
+
+        if (string.IsNullOrWhiteSpace(rawPassword))
+            errores.Add("La contraseña es obligatoria.");
+
+        return errores;
+    }
 
     public string EstablecerPassword(string rawPassword)
     {
@@ -22,6 +55,7 @@ public class ServiceUsuario
         foreach (byte b in bytes) builder.Append(b.ToString("x2"));
         return builder.ToString();
     }
+
     public bool ValidarPassword(string rawPassword, string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(rawPassword)) return false;
@@ -30,34 +64,6 @@ public class ServiceUsuario
         StringBuilder builder = new StringBuilder(64);
         foreach (byte b in bytes) builder.Append(b.ToString("x2"));
         return passwordHash.Equals(builder.ToString(), StringComparison.OrdinalIgnoreCase);
-    }
-
-    public bool Verificar(string nombre, string apellido, string email, DateTime fechaNacimiento, string passwordHash)
-    {
-        if (string.IsNullOrWhiteSpace(nombre))
-            return false;
-        if (nombre.Length > 100)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(apellido))
-            return false;
-        if (apellido.Length > 100)
-            return false;
-
-        if (fechaNacimiento == default || fechaNacimiento == DateTime.MinValue)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(email))
-            return false;
-        if (email.Length > 150)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            return false;
-        if (passwordHash.Length != 64)
-            return false;
-
-        return true;
     }
 
     public Usuario? Login(string email, string password)

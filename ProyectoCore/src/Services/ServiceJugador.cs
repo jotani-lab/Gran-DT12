@@ -8,37 +8,43 @@ public class ServiceJugador
     private readonly IRepoJugador _repo;
     public ServiceJugador(IRepoJugador repo) { _repo = repo; }
 
-    //TO DO implementar esto en el controller de jugador
-    public bool Verificar(string nombre, string apellido, string apodo, int equipoId, DateTime fechaNacimiento, int posicionId, decimal cotizacion)
+    public List<string> Validar(Jugador jugador)
     {
-        if (string.IsNullOrWhiteSpace(nombre))
-            return false;
-        if (nombre.Length > 100)
-            return false;
+        var errores = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(apellido))
-            return false;
-        if (apellido.Length > 100)
-            return false;
+        if (jugador is null)
+        {
+            errores.Add("Se debe ingresar un jugador.");
+            return errores;
+        }
 
-        if (apodo.Length > 100)
-            return false;
+        if (string.IsNullOrWhiteSpace(jugador.Nombre))
+            errores.Add("El nombre es obligatorio.");
+        else if (jugador.Nombre.Length > 100)
+            errores.Add("El nombre no puede superar los 100 caracteres.");
 
-        if (fechaNacimiento == default || fechaNacimiento == DateTime.MinValue)
-        return false;
+        if (string.IsNullOrWhiteSpace(jugador.Apellido))
+            errores.Add("El apellido es obligatorio.");
+        else if (jugador.Apellido.Length > 100)
+            errores.Add("El apellido no puede superar los 100 caracteres.");
 
-        if (equipoId <= 0)
-            return false;
+        if (!string.IsNullOrEmpty(jugador.Apodo) && jugador.Apodo.Length > 100)
+            errores.Add("El apodo no puede superar los 100 caracteres.");
 
-        if (posicionId <= 0)
-            return false;
-        if (posicionId > 4)
-            return false;
+        if (jugador.EquipoId <= 0)
+            errores.Add("El equipo no es válido.");
 
-        if (cotizacion < 0 || cotizacion > 99999999.99m)
-            return false;
+        if (jugador.FechaNacimiento == default ||
+            jugador.FechaNacimiento == DateTime.MinValue)
+            errores.Add("La fecha de nacimiento no es válida.");
 
-        return true;
+        if (jugador.PosicionId <= 0 || jugador.PosicionId > 4)
+            errores.Add("La posición no es válida.");
+
+        if (jugador.Cotizacion < 0 || jugador.Cotizacion > 99999999.99m)
+            errores.Add("La cotización debe estar entre $0 y $99.999.999,99.");
+
+        return errores;
     }
 
     public List<Jugador> ObtenerTodos() => _repo.ObtenerTodos();

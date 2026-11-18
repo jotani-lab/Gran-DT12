@@ -13,20 +13,31 @@ public class ServiceEquipo
     {
         _repo = repo ?? throw new ArgumentNullException(nameof(repo));
     }
-    public bool Verificar(Equipo equipo)
-        {        
-            if (string.IsNullOrWhiteSpace(equipo.Nombre))
-                return false;
+
+    public List<string> Validar(Equipo equipo)
+    {
+        var errores = new List<string>();
+
+        if (equipo is null)
+        {
+            errores.Add("Se debe ingresar un equipo.");
+            return errores;
+        }
+
+        if (string.IsNullOrWhiteSpace(equipo.Nombre))
+            errores.Add("El nombre del equipo es obligatorio.");
+        else
+        {
+            if (equipo.Nombre.Length <= 2)
+                errores.Add("El nombre del equipo debe tener más de 2 caracteres.");
 
             if (equipo.Nombre.Length > 100)
-                return false;
-            
-            if (equipo.Nombre.Length <= 2)
-                return false;
-
-            return true;
+                errores.Add("El nombre del equipo no puede superar los 100 caracteres.");
         }
-    
+
+        return errores;
+    }
+
     public List<Equipo> ObtenerTodos() => _repo.ObtenerTodos();
 
     public Equipo? ObtenerPorId(int id)
@@ -37,14 +48,12 @@ public class ServiceEquipo
         return _repo.ObtenerPorId(id);
     }
 
-    
-
     public int Crear(Equipo equipo)
     {
-        Verificar(equipo);
+        var errores = Validar(equipo);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores), nameof(equipo));
+
         return _repo.Crear(equipo);
     }
-        
-        
-        
 }

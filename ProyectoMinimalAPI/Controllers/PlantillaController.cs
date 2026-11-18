@@ -32,23 +32,14 @@ public class PlantillaController : ControllerBase
         if (plantilla == null)
             return NotFound();
 
-        try
-        {
-            return Ok(_service.PuntajeFecha(plantilla, nroFecha));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        try { return Ok(_service.PuntajeFecha(plantilla, nroFecha)); }
+        catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
     [HttpPost("verificar")]
     public IActionResult Verificar([FromBody] Plantilla plantilla)
     {
-        if (plantilla == null)
-            return BadRequest(new { error = "La plantilla es obligatoria." });
-
-        return Ok(_service.Verificar(plantilla));
+        return Ok(_service.Validar(plantilla));
     }
 
     [HttpPost]
@@ -56,8 +47,9 @@ public class PlantillaController : ControllerBase
     {
         try
         {
-            if (!_service.Verificar(plantilla))
-                return BadRequest(new { error = "La plantilla no es válida." });
+            var errores = _service.Validar(plantilla);
+            if (errores.Count > 0)
+                return BadRequest(new { errores });
 
             int id = _service.Crear(plantilla);
             return Ok(new { id, message = "Plantilla creada correctamente." });
