@@ -63,7 +63,7 @@ public class EquipoController : ControllerBase
     {
         try
         {
-            var filasEliminadas = _service.BorrarPorId(CrearEntidad(request));
+            var filasEliminadas = _service.BorrarPorId(BorrarEntidad(request));
             return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
         }
         catch (Exception ex)
@@ -72,15 +72,7 @@ public class EquipoController : ControllerBase
         }
     }
 
-    private static Equipo CrearEntidad(CrearEquipoRequest request)
-    {
-        return new Equipo
-        {
-            Nombre = request.Nombre
-        };
-    }
-
-    private static Equipo CrearEntidad(BorrarEquipoPorIdRequest request)
+    private static Equipo BorrarEntidad(BorrarEquipoPorIdRequest request)
     {
         return new Equipo
         {
