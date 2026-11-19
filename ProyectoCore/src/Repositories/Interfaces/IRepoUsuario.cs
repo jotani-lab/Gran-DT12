@@ -6,4 +6,5 @@ public interface IRepoUsuario
     Usuario? ObtenerPorEmail(string email);
     Usuario? ObtenerPorId(int id);
     int Crear(Usuario usuario);
+    int BorrarPorId(Usuario usuario);
 }

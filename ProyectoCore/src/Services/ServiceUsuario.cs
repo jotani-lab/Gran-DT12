@@ -84,5 +84,16 @@ public class ServiceUsuario
         return _repo.Crear(usuario);
     }
 
+    public int BorrarPorId(Usuario usuario)
+    {
+        if (usuario is null)
+            throw new ArgumentException("El usuario no existe.");
+
+        if (usuario.Id <= 0)
+            throw new ArgumentException("ID no válido.");
+
+        return _repo.BorrarPorId(usuario);
+    }
+
     public Usuario? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
 }

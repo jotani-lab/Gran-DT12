@@ -6,4 +6,5 @@ public interface IRepoEquipo
     Equipo? ObtenerPorNombre(string nombre);
     Equipo? ObtenerPorId(int id);
     int Crear(Equipo equipo);
+    int BorrarPorId(Equipo equipo);
 }

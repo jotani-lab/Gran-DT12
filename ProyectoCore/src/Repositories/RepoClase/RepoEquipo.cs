@@ -33,4 +33,10 @@ public class RepoEquipo : IRepoEquipo
         using var conn = _db.CreateConnection();
         return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM equipos WHERE nombre = @Nombre", new { nombre });
     }
+    public int BorrarPorId(Equipo equipo)
+    {
+        using var conn = _db.CreateConnection();
+        const string sql = "DELETE FROM equipos WHERE id = @Id";
+        return conn.Execute(sql, equipo);
+    }
 }

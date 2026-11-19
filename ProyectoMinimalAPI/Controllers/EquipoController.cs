@@ -57,4 +57,34 @@ public class EquipoController : ControllerBase
     {
         return new Equipo { Nombre = request.Nombre };
     }
+
+    [HttpDelete("borrar")]
+    public IActionResult Borrar([FromBody] BorrarEquipoPorIdRequest request)
+    {
+        try
+        {
+            var filasEliminadas = _service.BorrarPorId(CrearEntidad(request));
+            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    private static Equipo CrearEntidad(CrearEquipoRequest request)
+    {
+        return new Equipo
+        {
+            Nombre = request.Nombre
+        };
+    }
+
+    private static Equipo CrearEntidad(BorrarEquipoPorIdRequest request)
+    {
+        return new Equipo
+        {
+            Id = request.Id
+        };
+    }
 }
