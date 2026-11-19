@@ -23,7 +23,7 @@ public class PlantillaController : ControllerBase
     public IActionResult GetByUsuario(int usuarioId)
     {
         var res = _service.ObtenerPorUsuarioId(usuarioId);
-        return res == null ? NotFound() : Ok(res);
+        return Ok(res);
     }
 
     [HttpGet("{id}/puntaje-fecha/{nroFecha}")]
@@ -86,8 +86,8 @@ public class PlantillaController : ControllerBase
             Nombre = string.IsNullOrWhiteSpace(request.Nombre)
                 ? "Mi Plantilla"
                 : request.Nombre,
-            PresupuestoMaximo = 100000000.00m,
-            CantidadMaximaJugadores = 20
+            Presupuesto = 100000000.00m,
+            CantidadJugadores = 20
         };
     }
 }

@@ -46,7 +46,7 @@ CREATE TABLE jugadores (
 
 CREATE TABLE plantillas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL UNIQUE,
+    usuario_id INT NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     presupuesto_maximo DECIMAL(12, 2) NOT NULL DEFAULT 100000000.00,
     cantidad_maxima_jugadores INT NOT NULL DEFAULT 20,

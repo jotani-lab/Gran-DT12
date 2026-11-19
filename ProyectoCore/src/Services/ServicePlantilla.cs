@@ -26,12 +26,12 @@ public class ServicePlantilla
         if (string.IsNullOrWhiteSpace(plantilla.Nombre))
             errores.Add("El nombre de la plantilla es obligatorio.");
 
-        if (plantilla.PresupuestoMaximo <= 0)
+        if (plantilla.Presupuesto <= 0)
             errores.Add("El presupuesto debe ser mayor que cero.");
-        else if (plantilla.PresupuestoMaximo > 100000000.00m)
+        else if (plantilla.Presupuesto > 100000000.00m)
             errores.Add("El presupuesto no puede superar $100.000.000.");
 
-        if (plantilla.CantidadMaximaJugadores != 20)
+        if (plantilla.CantidadJugadores != 20)
             errores.Add("La cantidad máxima de jugadores debe ser 20.");
 
         return errores;
@@ -85,8 +85,8 @@ public class ServicePlantilla
         return total;
     }
 
-    public Plantilla? ObtenerPorUsuarioId(int usuarioId) => _repo.ObtenerPorUsuarioId(usuarioId);
     public Plantilla? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
+    public List<Plantilla> ObtenerPorUsuarioId(int usuarioId) => _repo.ObtenerPorUsuarioId(usuarioId);
 
     public int Crear(Plantilla plantilla)
     {

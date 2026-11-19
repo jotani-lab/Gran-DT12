@@ -10,10 +10,10 @@ public class TestPlantilla
     {
         var plantilla = new Plantilla();
 
-        Assert.Equal(20, plantilla.CantidadMaximaJugadores);
+        Assert.Equal(20, plantilla.CantidadJugadores);
 
-        plantilla.CantidadMaximaJugadores = 12;
-        Assert.Equal(12, plantilla.CantidadMaximaJugadores);
+        plantilla.CantidadJugadores = 12;
+        Assert.Equal(12, plantilla.CantidadJugadores);
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public class TestPlantilla
         var plantilla = new Plantilla
         {
             UsuarioId = 1,
-            CantidadMaximaJugadores = 0
+            CantidadJugadores = 0
         };
 
         Assert.False(plantilla.Verificar());

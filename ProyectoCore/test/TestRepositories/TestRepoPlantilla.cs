@@ -16,14 +16,14 @@ public class TestRepoPlantilla
         {
             UsuarioId = usuarioId,
             Nombre = "Plantilla de integración",
-            PresupuestoMaximo = 250000m,
-            CantidadMaximaJugadores = 18
+            Presupuesto = 250000m,
+            CantidadJugadores = 18
         };
 
         var id = repo.Crear(plantilla);
         db.RegistrarPlantilla(id);
 
-        Assert.Equal(18, repo.ObtenerPorId(id)?.CantidadMaximaJugadores);
-        Assert.Equal(18, repo.ObtenerPorUsuarioId(usuarioId)?.CantidadMaximaJugadores);
+        Assert.Equal(18, repo.ObtenerPorId(id)?.CantidadJugadores);
+        Assert.Equal(18, repo.ObtenerPorUsuarioId(usuarioId)?.CantidadJugadores);
     }
 }
