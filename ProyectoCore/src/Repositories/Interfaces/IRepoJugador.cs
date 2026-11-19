@@ -5,4 +5,5 @@ public interface IRepoJugador
     List<Jugador> ObtenerTodos();
     Jugador? ObtenerPorId(int id);
     int Crear(Jugador jugador);
+    int BorrarPorId(Jugador jugador);
 }

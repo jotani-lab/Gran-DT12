@@ -60,5 +60,16 @@ public class ServiceJugador
 
         return _repo.Crear(jugador);
     }
+
+    public int BorrarPorId(Jugador jugador)
+    {
+        if (jugador is null)
+            throw new ArgumentException("El jugador no existe.");
+
+        if (jugador.Id <= 0)
+            throw new ArgumentException("ID no válido.");
+
+        return _repo.BorrarPorId(jugador);
+    }
     
 }

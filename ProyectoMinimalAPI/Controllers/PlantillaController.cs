@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
 
@@ -37,16 +38,18 @@ public class PlantillaController : ControllerBase
     }
 
     [HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] Plantilla plantilla)
+    public IActionResult Verificar([FromBody] CrearPlantillaRequest request)
     {
+        var plantilla = CrearEntidad(request);
         return Ok(_service.Validar(plantilla));
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Plantilla plantilla)
+    public IActionResult Create([FromBody] CrearPlantillaRequest request)
     {
         try
         {
+            var plantilla = CrearEntidad(request);
             var errores = _service.Validar(plantilla);
             if (errores.Count > 0)
                 return BadRequest(new { errores });
@@ -58,5 +61,33 @@ public class PlantillaController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Borrar(int id)
+    {
+        try
+        {
+            var plantilla = new Plantilla { Id = id };
+            var filasEliminadas = _service.BorrarPorId(plantilla);
+            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    private static Plantilla CrearEntidad(CrearPlantillaRequest request)
+    {
+        return new Plantilla
+        {
+            UsuarioId = request.UsuarioId,
+            Nombre = string.IsNullOrWhiteSpace(request.Nombre)
+                ? "Mi Plantilla"
+                : request.Nombre,
+            PresupuestoMaximo = 100000000.00m,
+            CantidadMaximaJugadores = 20
+        };
     }
 }

@@ -96,4 +96,15 @@ public class ServicePlantilla
 
         return _repo.Crear(plantilla);
     }
+
+    public int BorrarPorId(Plantilla plantilla)
+    {
+        if (plantilla is null)
+            throw new ArgumentException("La plantilla no existe.");
+
+        if (plantilla.Id <= 0)
+            throw new ArgumentException("ID no válido.");
+
+        return _repo.BorrarPorId(plantilla);
+    }
 }

@@ -29,6 +29,13 @@ public class JugadorController : ControllerBase
         return Ok(_service.Validar(jugador));
     }
 
+    [HttpDelete("borrar")]
+    public IActionResult Borrar([FromBody] BorrarPorIdRequest request)
+    {
+        var id = _service.BorrarPorId(CrearEntidad(request));
+        return id == 0 ? NotFound() : Ok(id);
+    }
+
     [HttpPost]
     public IActionResult Create([FromBody] CrearJugadorRequest request)
     {
@@ -59,6 +66,14 @@ public class JugadorController : ControllerBase
             EquipoId = request.EquipoId,
             PosicionId = request.PosicionId,
             Cotizacion = request.Cotizacion
+        };
+    }
+
+    private static Jugador CrearEntidad(BorrarPorIdRequest request)
+    {
+        return new Jugador
+        {
+            Id = request.Id
         };
     }
 }

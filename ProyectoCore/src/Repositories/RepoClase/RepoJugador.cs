@@ -58,4 +58,12 @@ public class RepoJugador : IRepoJugador
                        SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, jugador);
     }
+
+    public int BorrarPorId(Jugador jugador)
+    {
+        using var conn = _db.CreateConnection();
+        string sql = @"DELETE FROM jugadores 
+                       WHERE id = @Id";
+        return conn.Execute(sql, jugador);
+    }
 }

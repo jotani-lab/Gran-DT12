@@ -31,4 +31,11 @@ public class RepoPlantilla : IRepoPlantilla
                        SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, plantilla);
     }
+
+    public int BorrarPorId(Plantilla plantilla)
+    {
+        using var conn = _db.CreateConnection();
+        string sql = "DELETE FROM plantillas WHERE id = @Id";
+        return conn.Execute(sql, plantilla);
+    }
 }
