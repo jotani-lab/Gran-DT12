@@ -5,4 +5,5 @@ public interface IRepoEquipo
     List<Equipo> ObtenerTodos();
     Equipo? ObtenerPorId(int id);
     int Crear(Equipo equipo);
+    int BorrarPorId(Equipo equipo);
 }

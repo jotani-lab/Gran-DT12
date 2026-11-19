@@ -38,4 +38,11 @@ public class RepoUsuario : IRepoUsuario
                        SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, usuario);
     }
+
+    public int BorrarPorId(Usuario usuario)
+    {
+        using var conn = _db.CreateConnection();
+        const string sql = "DELETE FROM usuarios WHERE id = @Id";
+        return conn.Execute(sql, usuario);
+    }
 }

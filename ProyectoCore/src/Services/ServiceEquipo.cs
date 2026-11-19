@@ -56,4 +56,15 @@ public class ServiceEquipo
 
         return _repo.Crear(equipo);
     }
+
+    public int BorrarPorId(Equipo equipo)
+    {
+        if (equipo is null)
+            throw new ArgumentException("El equipo no existe.");
+
+        if (equipo.Id <= 0)
+            throw new ArgumentException("ID no válido.");
+
+        return _repo.BorrarPorId(equipo);
+    }
 }

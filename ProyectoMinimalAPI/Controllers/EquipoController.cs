@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
 
@@ -26,16 +27,17 @@ public class EquipoController : ControllerBase
     }
 
     [HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] Equipo equipo)
+    public IActionResult Verificar([FromBody] CrearEquipoRequest request)
     {
-        return Ok(_service.Validar(equipo));
+        return Ok(_service.Validar(CrearEntidad(request)));
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Equipo equipo)
+    public IActionResult Create([FromBody] CrearEquipoRequest request)
     {
         try
         {
+            var equipo = CrearEntidad(request);
             var errores = _service.Validar(equipo);
             if (errores.Count > 0)
                 return BadRequest(new { errores });
@@ -47,5 +49,35 @@ public class EquipoController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+    [HttpDelete("borrar")]
+    public IActionResult Borrar([FromBody] BorrarEquipoPorIdRequest request)
+    {
+        try
+        {
+            var filasEliminadas = _service.BorrarPorId(CrearEntidad(request));
+            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    private static Equipo CrearEntidad(CrearEquipoRequest request)
+    {
+        return new Equipo
+        {
+            Nombre = request.Nombre
+        };
+    }
+
+    private static Equipo CrearEntidad(BorrarEquipoPorIdRequest request)
+    {
+        return new Equipo
+        {
+            Id = request.Id
+        };
     }
 }

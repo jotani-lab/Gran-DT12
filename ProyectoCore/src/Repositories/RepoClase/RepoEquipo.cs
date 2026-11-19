@@ -27,4 +27,11 @@ public class RepoEquipo : IRepoEquipo
         string sql = "INSERT INTO equipos (nombre) VALUES (@Nombre); SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, equipo);
     }
+
+    public int BorrarPorId(Equipo equipo)
+    {
+        using var conn = _db.CreateConnection();
+        const string sql = "DELETE FROM equipos WHERE id = @Id";
+        return conn.Execute(sql, equipo);
+    }
 }

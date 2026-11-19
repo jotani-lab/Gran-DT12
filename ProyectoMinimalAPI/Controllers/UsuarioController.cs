@@ -62,4 +62,30 @@ public class UsuarioController : ControllerBase
             return BadRequest(new { error = ex.Message });
         }
     }
+
+    [HttpDelete("borrar")]
+    public IActionResult Borrar([FromBody] BorrarUsuarioPorIdRequest request)
+    {
+        try
+        {
+            if (request == null)
+                return BadRequest(new { error = "Los datos del usuario son obligatorios." });
+
+            var usuario = CrearEntidad(request);
+            var filasEliminadas = _service.BorrarPorId(usuario);
+            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    private static Usuario CrearEntidad(BorrarUsuarioPorIdRequest request)
+    {
+        return new Usuario
+        {
+            Id = request.Id
+        };
+    }
 }
