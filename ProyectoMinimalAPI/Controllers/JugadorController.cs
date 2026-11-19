@@ -32,7 +32,8 @@ public class JugadorController : ControllerBase
     [HttpDelete("borrar")]
     public IActionResult Borrar([FromBody] BorrarPorIdRequest request)
     {
-        var id = _service.BorrarPorId(CrearEntidad(request));
+        var jugador = BorrarEntidad(request);
+        var id = _service.BorrarPorId(jugador);
         return id == 0 ? NotFound() : Ok(id);
     }
 
@@ -69,7 +70,7 @@ public class JugadorController : ControllerBase
         };
     }
 
-    private static Jugador CrearEntidad(BorrarPorIdRequest request)
+    private static Jugador BorrarEntidad(BorrarPorIdRequest request)
     {
         return new Jugador
         {
