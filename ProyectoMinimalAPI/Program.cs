@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? "Server=localhost;Database=gran_et12;User ID=5to_agbd;Password=Trigg3rs!;";
 
-// Registrar DBConnection
+// Registrar DBConnection (Cambiar a AddScoped si maneja la conexión abierta internamente)
 builder.Services.AddSingleton(new DBConnection(connectionString));
 
 // Registrar Repositorios
@@ -32,26 +32,16 @@ builder.Services.AddScoped<ServicePlantillaSuplente>();
 builder.Services.AddScoped<ServicePuntuacion>();
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
-app.Urls.Clear();
-app.Urls.Add("http://localhost:6767");
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "GranDT API v1");
-    });
-    
-    
+
+app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
-        options.WithTitle("GranDT API - Documentación Scalar").WithTheme(ScalarTheme.BluePlanet);
+        options.WithTitle("GranDT API - Documentación Scalar")
+               .WithTheme(ScalarTheme.BluePlanet);
     });
-//}
 
 app.UseAuthorization();
 app.MapControllers();

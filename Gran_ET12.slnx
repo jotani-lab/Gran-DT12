@@ -1,9 +1,13 @@
 <Solution>
-  <Folder Name="/src/">
+  <Folder Name="/ProyectoCore/" />
+  <Folder Name="/ProyectoCore/src/">
     <Project Path="ProyectoCore/src/ProyectoCore.csproj" />
-    <Project Path="ProyectoMinimalAPI/Gran_ET12.csproj" />
   </Folder>
-  <Folder Name="/test/">
+  <Folder Name="/ProyectoCore/test/">
     <Project Path="ProyectoCore/test/ProyectoCoreTest.csproj" />
   </Folder>
+  <Folder Name="/ProyectoMinimalAPI/">
+    <Project Path="ProyectoMinimalAPI/Gran_ET12.csproj" />
+  </Folder>
+
 </Solution>
