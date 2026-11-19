@@ -27,4 +27,10 @@ public class RepoEquipo : IRepoEquipo
         string sql = "INSERT INTO equipos (nombre) VALUES (@Nombre); SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, equipo);
     }
+
+    public Equipo? ObtenerPorNombre(string nombre)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM equipos WHERE nombre = @Nombre", new { nombre });
+    }
 }

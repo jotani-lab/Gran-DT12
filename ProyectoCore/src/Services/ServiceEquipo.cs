@@ -33,6 +33,9 @@ public class ServiceEquipo
 
             if (equipo.Nombre.Length > 100)
                 errores.Add("El nombre del equipo no puede superar los 100 caracteres.");
+            
+            if (_repo.ObtenerPorNombre(equipo.Nombre) != null)
+                errores.Add("Nombre del equipo ya existente.");
         }
 
         return errores;
@@ -46,6 +49,14 @@ public class ServiceEquipo
             throw new ArgumentOutOfRangeException(nameof(id), "El id del equipo debe ser mayor que cero.");
 
         return _repo.ObtenerPorId(id);
+    }
+
+    public Equipo? ObtenerPorNombre(string nombre)
+    {
+        if (string.IsNullOrWhiteSpace(nombre))
+            throw new ArgumentOutOfRangeException(nameof(nombre), "Nombre invalido");
+        
+        return _repo.ObtenerPorNombre(nombre);
     }
 
     public int Crear(Equipo equipo)
