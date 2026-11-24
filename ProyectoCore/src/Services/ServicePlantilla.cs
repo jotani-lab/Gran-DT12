@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using ProyectoCore.Models;
 using ProyectoCore.Repositories.Interfaces;
 
@@ -37,56 +36,34 @@ public class ServicePlantilla
         return errores;
     }
 
-    public List<PlantillaTitular> Titulares { get; set; } = new();
-    public List<PlantillaSuplente> Suplentes { get; set; } = new();
-
-    public bool EsValidaFormacionTitular()
-    {
-        if (Titulares.Count != 11) return false;
-
-        int arqueros = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 1);
-        int defensores = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 2);
-        int mediocampistas = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 3);
-        int delanteros = Titulares.Count(t => t.Jugador != null && t.Jugador.PosicionId == 4);
-
-        return arqueros == 1 && defensores == 4 && mediocampistas == 4 && delanteros == 2;
-    }
-
-    public decimal PresupuestoConsumido()
-    {
-        decimal total = 0m;
-        foreach (var t in Titulares) if (t.Jugador != null) total += t.Jugador.Cotizacion;
-        foreach (var s in Suplentes) if (s.Jugador != null) total += s.Jugador.Cotizacion;
-        return total;
-    }
-
-    public bool EsPresupuestoValido(decimal presupuestoMaximo) => PresupuestoConsumido() <= presupuestoMaximo;
-    public bool EsCantidadJugadoresValida(int cantidadMaximaJugadores) => (Titulares.Count + Suplentes.Count) <= cantidadMaximaJugadores;
-    public decimal PresupuestoRestante(decimal presupuestoMaximo) => presupuestoMaximo - PresupuestoConsumido();
-
-    public decimal PuntajeFecha(Plantilla plantilla, int nroFecha)
+    public decimal PuntajeFecha(Plantilla plantilla, int nroMes, int nroFecha)
     {
         if (plantilla is null)
             throw new ArgumentNullException(nameof(plantilla));
+        if (plantilla.Id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(plantilla.Id), "El ID de la plantilla debe ser mayor a cero.");
+        if (nroMes <= 0 || nroMes > 12)
+            throw new ArgumentOutOfRangeException(nameof(nroMes), "El número de mes debe estar entre 1 y 12.");
 
         if (nroFecha <= 0 || nroFecha >= 50)
             throw new ArgumentOutOfRangeException(nameof(nroFecha), "Número de fecha inválido.");
 
-        decimal total = 0m;
-        foreach (var t in Titulares)
-        {
-            if (t.Jugador != null)
-            {
-                var p = t.Jugador.Puntuaciones.FirstOrDefault(x => x.NroFecha == nroFecha);
-                if (p != null) total += p.Nota;
-            }
-        }
-
-        return total;
+        return _repo.PuntajeTitularesFecha(plantilla.Id, nroMes, nroFecha);
     }
 
-    public Plantilla? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
-    public List<Plantilla> ObtenerPorUsuarioId(int usuarioId) => _repo.ObtenerPorUsuarioId(usuarioId);
+    public Plantilla? ObtenerPorId(int id)
+    {
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id), "El ID de la plantilla debe ser mayor a cero.");
+        return _repo.ObtenerPorId(id);
+    }
+
+    public List<Plantilla> ObtenerPorUsuarioId(int usuarioId)
+    {
+        if (usuarioId <= 0)
+            throw new ArgumentOutOfRangeException(nameof(usuarioId), "El ID del usuario debe ser mayor a cero.");
+        return _repo.ObtenerPorUsuarioId(usuarioId);
+    }
 
     public int Crear(Plantilla plantilla)
     {

@@ -1,4 +1,5 @@
 using Dapper;
+using System.Data;
 using ProyectoCore.Models;
 using ProyectoCore.Repositories.Interfaces;
 
@@ -6,43 +7,38 @@ namespace ProyectoCore.Repositories.RepoClase;
 
 public class RepoUsuario : IRepoUsuario
 {
-    private readonly DBConnection _db;
-    public RepoUsuario(DBConnection db) { _db = db; }
+    private readonly IDbConnection _connection;
+    public RepoUsuario(IDbConnection connection) { _connection = connection; }
 
     public List<Usuario> ObtenerTodos()
     {
-        using var conn = _db.CreateConnection();
         string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario";
-        return conn.Query<Usuario>(sql).ToList();
+        return _connection.Query<Usuario>(sql).ToList();
     }
 
     public Usuario? ObtenerPorEmail(string email)
     {
-        using var conn = _db.CreateConnection();
         string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario WHERE email = @email";
-        return conn.QueryFirstOrDefault<Usuario>(sql, new { email });
+        return _connection.QueryFirstOrDefault<Usuario>(sql, new { email });
     }
 
     public Usuario? ObtenerPorId(int id)
     {
-        using var conn = _db.CreateConnection();
         string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario WHERE id = @id";
-        return conn.QueryFirstOrDefault<Usuario>(sql, new { id });
+        return _connection.QueryFirstOrDefault<Usuario>(sql, new { id });
     }
 
     public int Crear(Usuario usuario)
     {
-        using var conn = _db.CreateConnection();
         string sql = @"INSERT INTO Usuario (nombre, apellido, email, fechaNacimiento, passwordHash, esAdmin)
                        VALUES (@Nombre, @Apellido, @Email, @FechaNacimiento, @PasswordHash, @EsAdmin);
                        SELECT LAST_INSERT_ID();";
-        return conn.ExecuteScalar<int>(sql, usuario);
+        return _connection.ExecuteScalar<int>(sql, usuario);
     }
 
     public int BorrarPorId(Usuario usuario)
     {
-        using var conn = _db.CreateConnection();
         const string sql = "DELETE FROM Usuario WHERE id = @Id";
-        return conn.Execute(sql, usuario);
+        return _connection.Execute(sql, usuario);
     }
 }

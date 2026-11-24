@@ -14,7 +14,7 @@ public class TestRepoPlantillaTitular
         var jugadorId = db.CrearJugador(equipoId, posicionId);
         var usuarioId = db.CrearUsuario();
         var plantillaId = db.CrearPlantilla(usuarioId);
-        var repo = new RepoPlantillaTitular(db.Db);
+        var repo = new RepoPlantillaTitular(db.Connection);
 
         Assert.True(repo.AgregarTitular(plantillaId, jugadorId));
         Assert.True(repo.RemoverTitular(plantillaId, jugadorId));

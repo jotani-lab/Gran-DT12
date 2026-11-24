@@ -53,7 +53,7 @@ namespace ProyectoCore.Tests
 
             // Moq sobre ObtenerPorUsuarioId(2)
             mockRepo.Setup(repo => repo.ObtenerPorUsuarioId(2))
-                    .Returns(plantillaUsuario);
+                    .Returns(new List<Plantilla> { plantillaUsuario });
 
             var ServicePlantilla = new ServicePlantilla(mockRepo.Object);
 
@@ -61,11 +61,24 @@ namespace ProyectoCore.Tests
             var resultado = ServicePlantilla.ObtenerPorUsuarioId(2);
 
             // ASSERT
-            Assert.NotNull(resultado);
-            Assert.Equal(5, resultado.Id);
-            Assert.Equal(2, resultado.UsuarioId);
+            var resultadoUsuario = Assert.Single(resultado);
+            Assert.Equal(5, resultadoUsuario.Id);
+            Assert.Equal(2, resultadoUsuario.UsuarioId);
             
             mockRepo.Verify(repo => repo.ObtenerPorUsuarioId(2), Times.Once);
+        }
+
+        [Fact]
+        public void PuntajeFecha_ConsultaRepositorioConPlantillaMesYFecha()
+        {
+            var mockRepo = new Mock<IRepoPlantilla>();
+            mockRepo.Setup(repo => repo.PuntajeTitularesFecha(3, 5, 12)).Returns(78.5m);
+            var servicio = new ServicePlantilla(mockRepo.Object);
+
+            var puntaje = servicio.PuntajeFecha(new Plantilla { Id = 3 }, 5, 12);
+
+            Assert.Equal(78.5m, puntaje);
+            mockRepo.Verify(repo => repo.PuntajeTitularesFecha(3, 5, 12), Times.Once);
         }
 
         [Fact]

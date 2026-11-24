@@ -10,7 +10,7 @@ public class TestRepoEquipo
     public void CrearYConsultar_UsaTablaEquipo()
     {
         using var db = new TestRepositorioSupport();
-        var repo = new RepoEquipo(db.Db);
+        var repo = new RepoEquipo(db.Connection);
         var equipo = new Equipo { Nombre = $"Equipo-{Guid.NewGuid():N}" };
 
         var id = repo.Crear(equipo);

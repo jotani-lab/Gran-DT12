@@ -21,7 +21,7 @@ public class TestRepoJugador
             PosicionId = posicionId,
             Cotizacion = 75000000.00m
         };
-        var repo = new RepoJugador(db.Db);
+        var repo = new RepoJugador(db.Connection);
 
         var id = repo.Crear(jugador);
         db.RegistrarJugador(id);

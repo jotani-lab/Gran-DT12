@@ -1,4 +1,5 @@
 using Dapper;
+using System.Data;
 using ProyectoCore.Models;
 using ProyectoCore.Repositories.Interfaces;
 
@@ -6,8 +7,8 @@ namespace ProyectoCore.Repositories.RepoClase;
 
 public class RepoPuntuacion : IRepoPuntuacion
 {
-    private readonly DBConnection _db;
-    public RepoPuntuacion(DBConnection db) { _db = db; }
+    private readonly IDbConnection _connection;
+    public RepoPuntuacion(IDbConnection connection) { _connection = connection; }
 
     private const string SelectSql = @"
         SELECT p.id AS IdPuntuacion,
@@ -21,7 +22,6 @@ public class RepoPuntuacion : IRepoPuntuacion
 
     public bool RegistrarPuntuacion(Puntuacion puntuacion)
     {
-        using var conn = _db.CreateConnection();
         const string sql = @"
             INSERT INTO Puntuacion (jugadorId, nroMes, nroFecha, nota)
             VALUES (@JugadorId, @NroMes, @NroFecha, @Nota)
@@ -29,7 +29,7 @@ public class RepoPuntuacion : IRepoPuntuacion
             SELECT id FROM Puntuacion
             WHERE jugadorId = @JugadorId AND nroMes = @NroMes AND nroFecha = @NroFecha;";
 
-        var id = conn.ExecuteScalar<long>(sql, puntuacion);
+        var id = _connection.ExecuteScalar<long>(sql, puntuacion);
         if (id > 0)
             puntuacion.IdPuntuacion = checked((int)id);
 
@@ -38,53 +38,46 @@ public class RepoPuntuacion : IRepoPuntuacion
 
     public bool ActualizarPuntuacion(Puntuacion puntuacion)
     {
-        using var conn = _db.CreateConnection();
         const string sql = @"
             UPDATE Puntuacion
             SET jugadorId = @JugadorId, nroMes = @NroMes,
                 nroFecha = @NroFecha, nota = @Nota
             WHERE id = @IdPuntuacion";
-        return conn.Execute(sql, puntuacion) > 0;
+        return _connection.Execute(sql, puntuacion) > 0;
     }
 
     public bool BorrarPorId(int idPuntuacion)
     {
-        using var conn = _db.CreateConnection();
-        return conn.Execute("DELETE FROM Puntuacion WHERE id = @idPuntuacion", new { idPuntuacion }) > 0;
+        return _connection.Execute("DELETE FROM Puntuacion WHERE id = @idPuntuacion", new { idPuntuacion }) > 0;
     }
 
     public Puntuacion? ObtenerPorId(int idPuntuacion)
     {
-        using var conn = _db.CreateConnection();
-        return conn.QueryFirstOrDefault<Puntuacion>(SelectSql + " WHERE p.id = @idPuntuacion", new { idPuntuacion });
+        return _connection.QueryFirstOrDefault<Puntuacion>(SelectSql + " WHERE p.id = @idPuntuacion", new { idPuntuacion });
     }
 
     public List<Puntuacion> ObtenerTodas()
     {
-        using var conn = _db.CreateConnection();
-        return conn.Query<Puntuacion>(SelectSql + " ORDER BY p.nroMes, p.nroFecha, p.id").ToList();
+        return _connection.Query<Puntuacion>(SelectSql + " ORDER BY p.nroMes, p.nroFecha, p.id").ToList();
     }
 
     public List<Puntuacion> ObtenerPorJugadorId(int jugadorId)
     {
-        using var conn = _db.CreateConnection();
-        return conn.Query<Puntuacion>(
+        return _connection.Query<Puntuacion>(
             SelectSql + " WHERE p.jugadorId = @jugadorId ORDER BY p.nroMes, p.nroFecha",
             new { jugadorId }).ToList();
     }
 
     public List<Puntuacion> ObtenerPorMes(int nroMes)
     {
-        using var conn = _db.CreateConnection();
-        return conn.Query<Puntuacion>(
+        return _connection.Query<Puntuacion>(
             SelectSql + " WHERE p.nroMes = @nroMes ORDER BY p.nroFecha, p.jugadorId",
             new { nroMes }).ToList();
     }
 
     public Puntuacion? ObtenerPorJugadorMesFecha(int jugadorId, int nroMes, int nroFecha)
     {
-        using var conn = _db.CreateConnection();
-        return conn.QueryFirstOrDefault<Puntuacion>(
+        return _connection.QueryFirstOrDefault<Puntuacion>(
             SelectSql + " WHERE p.jugadorId = @jugadorId AND p.nroMes = @nroMes AND p.nroFecha = @nroFecha",
             new { jugadorId, nroMes, nroFecha });
     }

@@ -1,3 +1,5 @@
+using System.Data;
+using MySqlConnector;
 using ProyectoCore.Repositories.Interfaces;
 using ProyectoCore.Repositories.RepoClase;
 using ProyectoCore.Security;
@@ -9,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? "Server=localhost;Database=5to_GranDT12;User ID=5to_agbd;Password=Trigg3rs!;";
 
-// Registrar DBConnection (Cambiar a AddScoped si maneja la conexión abierta internamente)
-builder.Services.AddSingleton(new DBConnection(connectionString));
+// La conexión pertenece al request y será liberada por el contenedor al terminar el scope.
+builder.Services.AddScoped<IDbConnection>(_ => new MySqlConnection(connectionString));
 
 // Registrar Repositorios
 builder.Services.AddScoped<IRepoPosicion, RepoPosicion>();

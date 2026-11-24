@@ -10,7 +10,7 @@ public class TestRepoPosicion
     {
         using var db = new TestRepositorioSupport();
         var id = db.CrearPosicion();
-        var repo = new RepoPosicion(db.Db);
+        var repo = new RepoPosicion(db.Connection);
 
         var posicion = repo.ObtenerPorId(id);
 

@@ -34,11 +34,18 @@ public class EquipoController : ControllerBase
         }
     }
 
-    //[HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] CrearEquipoRequest request)
+    [HttpGet("nombre/{nombre}")]
+    public IActionResult GetByNombre(string nombre)
     {
-        var equipo = CrearEntidad(request);
-        return Ok(_service.Validar(equipo));
+        try
+        {
+            var equipo = _service.ObtenerPorNombre(nombre);
+            return equipo == null ? NotFound() : Ok(equipo);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost]
@@ -52,6 +59,7 @@ public class EquipoController : ControllerBase
                 return BadRequest(new { errores });
 
             int id = _service.Crear(equipo);
+            equipo.Id = id;
             return CreatedAtAction(nameof(GetById), new { id }, equipo);
         }
         catch (ArgumentException ex)

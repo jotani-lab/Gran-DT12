@@ -59,6 +59,10 @@ public class ServiceUsuario
 
     public int Registrar(Usuario usuario, string rawPassword)
     {
+        var errores = Validar(usuario, rawPassword);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores), nameof(usuario));
+
         var existente = _repo.ObtenerPorEmail(usuario.Email);
         if (existente != null)
             throw new InvalidOperationException("El email ya se encuentra registrado.");
@@ -75,9 +79,15 @@ public class ServiceUsuario
         if (usuario.Id <= 0)
             throw new ArgumentException("ID no válido.");
 
-        var filasEliminadas = _repo.BorrarPorId(usuario);
-        return filasEliminadas == 0;
+        return _repo.BorrarPorId(usuario) > 0;
     }
 
-    public Usuario? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
+    public Usuario? ObtenerPorId(int id)
+    {
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id), "El ID del usuario debe ser mayor a cero.");
+        return _repo.ObtenerPorId(id);
+    }
+
+    public List<Usuario> ObtenerTodos() => _repo.ObtenerTodos();
 }

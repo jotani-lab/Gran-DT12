@@ -1,6 +1,30 @@
 @ProyectoMinimalAPI_HostAddress = http://localhost:6767
 
-GET {{ProyectoMinimalAPI_HostAddress}}/api/controllerjugador/
+GET {{ProyectoMinimalAPI_HostAddress}}/api/Jugador
 Accept: application/json
 
 ###
+
+POST {{ProyectoMinimalAPI_HostAddress}}/api/Puntuacion
+Content-Type: application/json
+
+{
+	"jugadorId": 1,
+	"nroMes": 5,
+	"nroFecha": 1,
+	"nota": 8.5
+}
+
+###
+
+POST {{ProyectoMinimalAPI_HostAddress}}/api/Puntuacion/jugador/1/mes/5/fecha/1
+Content-Type: application/json
+
+{
+	"nota": 8.5
+}
+
+###
+
+GET {{ProyectoMinimalAPI_HostAddress}}/api/Plantilla/1/puntaje/mes/5/fecha/1
+Accept: application/json

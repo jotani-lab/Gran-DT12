@@ -19,15 +19,15 @@ public class JugadorController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var res = _service.ObtenerPorId(id);
-        return res == null ? NotFound() : Ok(res);
-    }
-
-    [HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] CrearJugadorRequest request)
-    {
-        var jugador = CrearEntidad(request);
-        return Ok(_service.Validar(jugador));
+        try
+        {
+            var res = _service.ObtenerPorId(id);
+            return res == null ? NotFound() : Ok(res);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpDelete("borrar")]
@@ -55,6 +55,9 @@ public class JugadorController : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] CrearJugadorRequest request)
     {
+        if (request == null)
+            return BadRequest(new { error = "Los datos del jugador son obligatorios." });
+
         try
         {
             var jugador = CrearEntidad(request);
@@ -63,6 +66,7 @@ public class JugadorController : ControllerBase
                 return BadRequest(new { errores });
 
             int id = _service.Crear(jugador);
+            jugador.Id = id;
             return CreatedAtAction(nameof(GetById), new { id }, jugador);
         }
         catch (ArgumentException ex)

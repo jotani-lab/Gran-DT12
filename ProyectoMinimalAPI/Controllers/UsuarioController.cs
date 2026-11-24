@@ -13,21 +13,21 @@ public class UsuarioController : ControllerBase
     private readonly ServiceUsuario _service;
     public UsuarioController(ServiceUsuario service) { _service = service; }
 
-    [HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] RegistroRequest req)
+    [HttpGet]
+    public IActionResult GetAll() => Ok(_service.ObtenerTodos().Select(UsuarioResumenResponse.DesdeUsuario));
+
+    [HttpGet("{id:int}")]
+    public IActionResult GetById(int id)
     {
-        if (req == null)
-            return BadRequest(new { errores = new[] { "Los datos del usuario son obligatorios." } });
-
-        var usuario = new Usuario
+        try
         {
-            Nombre = req.Nombre,
-            Apellido = req.Apellido,
-            Email = req.Email,
-            FechaNacimiento = req.FechaNacimiento
-        };
-
-        return Ok(_service.Validar(usuario, req.Password));
+            var usuario = _service.ObtenerPorId(id);
+            return usuario == null ? NotFound() : Ok(UsuarioResponse.DesdeUsuario(usuario));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("login")]
@@ -38,7 +38,7 @@ public class UsuarioController : ControllerBase
 
         var user = _service.Login(req.Email, req.Password);
         if (user == null) return Unauthorized(new { error = "Credenciales inválidas." });
-        return Ok(user);
+        return Ok(UsuarioResponse.DesdeUsuario(user));
     }
 
     [HttpPost("registro")]
@@ -62,7 +62,8 @@ public class UsuarioController : ControllerBase
                 return BadRequest(new { errores });
 
             int id = _service.Registrar(usuario, req.Password);
-            return Ok(new { id, message = "Usuario registrado correctamente." });
+            usuario.Id = id;
+            return CreatedAtAction(nameof(GetById), new { id }, UsuarioResponse.DesdeUsuario(usuario));
         }
         catch (ArgumentException ex)
         {
@@ -87,10 +88,10 @@ public class UsuarioController : ControllerBase
         try
         {
             var usuario = CrearEntidad(request);
-            var noEncontrado = _service.BorrarPorId(usuario);
-            return noEncontrado
-                ? NotFound(new { error = "No existe el usuario indicado." })
-                : Ok(new { message = "Usuario eliminado correctamente." });
+            var eliminado = _service.BorrarPorId(usuario);
+            return eliminado
+                ? Ok(new { message = "Usuario eliminado correctamente." })
+                : NotFound(new { error = "No existe el usuario indicado." });
         }
         catch (ArgumentException ex)
         {

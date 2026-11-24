@@ -10,7 +10,7 @@ public class TestRepoUsuario
     public void CrearYConsultar_UsaTablaUsuario()
     {
         using var db = new TestRepositorioSupport();
-        var repo = new RepoUsuario(db.Db);
+        var repo = new RepoUsuario(db.Connection);
         var usuario = new Usuario
         {
             Nombre = $"Usuario-{Guid.NewGuid():N}",

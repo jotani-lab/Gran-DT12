@@ -48,15 +48,18 @@ public class ServiceJugador
     }
 
     public List<Jugador> ObtenerTodos() => _repo.ObtenerTodos();
-    public Jugador? ObtenerPorId(int id) => _repo.ObtenerPorId(id);
+    public Jugador? ObtenerPorId(int id)
+    {
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id), "El ID del jugador debe ser mayor a cero.");
+        return _repo.ObtenerPorId(id);
+    }
 
     public int Crear(Jugador jugador)
     {
-        if (string.IsNullOrWhiteSpace(jugador.Nombre) || string.IsNullOrWhiteSpace(jugador.Apellido))
-            throw new ArgumentException("El nombre y apellido del jugador son obligatorios.");
-
-        if (jugador.Cotizacion < 0 || jugador.Cotizacion > 99999999.99m)
-            throw new ArgumentOutOfRangeException(nameof(jugador.Cotizacion), "La cotización debe estar entre $0 y $99.999.999,99.");
+        var errores = Validar(jugador);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores), nameof(jugador));
 
         return _repo.Crear(jugador);
     }

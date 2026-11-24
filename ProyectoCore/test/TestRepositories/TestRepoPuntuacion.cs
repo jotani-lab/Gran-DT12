@@ -13,7 +13,7 @@ public class TestRepoPuntuacion
         var equipoId = db.CrearEquipo();
         var posicionId = db.CrearPosicion();
         var jugadorId = db.CrearJugador(equipoId, posicionId);
-        var repo = new RepoPuntuacion(db.Db);
+        var repo = new RepoPuntuacion(db.Connection);
         var puntuacion = new Puntuacion
         {
             JugadorId = jugadorId,

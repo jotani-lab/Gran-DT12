@@ -14,7 +14,7 @@ public class TestRepoPlantillaSuplente
         var jugadorId = db.CrearJugador(equipoId, posicionId);
         var usuarioId = db.CrearUsuario();
         var plantillaId = db.CrearPlantilla(usuarioId);
-        var repo = new RepoPlantillaSuplente(db.Db);
+        var repo = new RepoPlantillaSuplente(db.Connection);
 
         Assert.True(repo.AgregarSuplente(plantillaId, jugadorId));
         Assert.True(repo.RemoverSuplente(plantillaId, jugadorId));

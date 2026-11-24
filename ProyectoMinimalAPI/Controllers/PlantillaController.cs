@@ -16,38 +16,50 @@ public class PlantillaController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var res = _service.ObtenerPorId(id);
-        return res == null ? NotFound() : Ok(res);
+        try
+        {
+            var res = _service.ObtenerPorId(id);
+            return res == null ? NotFound() : Ok(res);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet("usuario/{usuarioId}")]
     public IActionResult GetByUsuario(int usuarioId)
     {
-        var res = _service.ObtenerPorUsuarioId(usuarioId);
-        return Ok(res);
+        try
+        {
+            return Ok(_service.ObtenerPorUsuarioId(usuarioId));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
-    [HttpGet("{id}/puntaje-fecha/{nroFecha}")]
-    public IActionResult PuntajeFecha(int id, int nroFecha)
+    [HttpGet("{id}/puntaje/mes/{nroMes}/fecha/{nroFecha}")]
+    public IActionResult PuntajeFecha(int id, int nroMes, int nroFecha)
     {
+        if (id <= 0)
+            return BadRequest(new { error = "El ID de la plantilla debe ser mayor a cero." });
+
         var plantilla = _service.ObtenerPorId(id);
         if (plantilla == null)
             return NotFound();
 
-        try { return Ok(_service.PuntajeFecha(plantilla, nroFecha)); }
+        try { return Ok(new { plantillaId = id, nroMes, nroFecha, puntajeTotal = _service.PuntajeFecha(plantilla, nroMes, nroFecha) }); }
         catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
-    }
-
-    [HttpPost("verificar")]
-    public IActionResult Verificar([FromBody] CrearPlantillaRequest request)
-    {
-        var plantilla = CrearEntidad(request);
-        return Ok(_service.Validar(plantilla));
     }
 
     [HttpPost]
     public IActionResult Create([FromBody] CrearPlantillaRequest request)
     {
+        if (request == null)
+            return BadRequest(new { error = "Los datos de la plantilla son obligatorios." });
+
         try
         {
             var plantilla = CrearEntidad(request);
@@ -56,7 +68,8 @@ public class PlantillaController : ControllerBase
                 return BadRequest(new { errores });
 
             int id = _service.Crear(plantilla);
-            return Ok(new { id, message = "Plantilla creada correctamente." });
+            plantilla.Id = id;
+            return CreatedAtAction(nameof(GetById), new { id }, plantilla);
         }
         catch (ArgumentException ex)
         {

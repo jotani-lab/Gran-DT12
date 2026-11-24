@@ -3,10 +3,10 @@ using Xunit;
 
 namespace ProyectoCore.Test.TestRepositories;
 
-public class TestDBConnection
+public class TestMySqlConnection
 {
     [MySqlFact]
-    public void CreateConnection_AbreConexionConLaBaseDePrueba()
+    public void ConnectionFixture_AbreConexionConLaBaseDePrueba()
     {
         using var db = new TestRepositorioSupport();
 

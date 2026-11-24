@@ -1,6 +1,5 @@
 using Dapper;
 using MySqlConnector;
-using ProyectoCore.Repositories.RepoClase;
 using Xunit;
 
 namespace ProyectoCore.Test.TestRepositories;
@@ -22,7 +21,6 @@ public sealed class TestRepositorioSupport : IDisposable
     private readonly List<int> _jugadorIds = new();
     private readonly List<int> _plantillaIds = new();
 
-    public DBConnection Db { get; }
     public MySqlConnection Connection { get; }
 
     public void RegistrarEquipo(int id) => _equipoIds.Add(id);
@@ -40,7 +38,6 @@ public sealed class TestRepositorioSupport : IDisposable
         if (!settings.Database.EndsWith("_test", StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("Las pruebas SQL solo pueden usar una base cuyo nombre termine en '_test'.");
 
-        Db = new DBConnection(connectionString);
         Connection = new MySqlConnection(connectionString);
         Connection.Open();
     }
