@@ -1,5 +1,5 @@
 -- 03 Inserts.sql - Carga de Datos Iniciales
-USE gran_et12;
+USE 5to_GranDT12;
 
 INSERT INTO posiciones (id, nombre) VALUES 
 (1, 'Arquero'),

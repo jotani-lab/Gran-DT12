@@ -6,7 +6,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? "Server=localhost;Database=gran_et12;User ID=5to_agbd;Password=Trigg3rs!;";
+    ?? "Server=localhost;Database=5to_GranDT12;User ID=5to_agbd;Password=Trigg3rs!;";
 
 // Registrar DBConnection (Cambiar a AddScoped si maneja la conexión abierta internamente)
 builder.Services.AddSingleton(new DBConnection(connectionString));

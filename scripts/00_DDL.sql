@@ -1,6 +1,8 @@
 -- 00 DDL.sql - Creación de Base de Datos y Tablas
-CREATE DATABASE IF NOT EXISTS gran_et12;
-USE gran_et12;
+DROP DATABASE IF EXISTS 5to_GranDT12;
+CREATE DATABASE 5to_GranDT12;
+
+USE 5to_GranDT12;
 
 DROP TABLE IF EXISTS puntuaciones;
 DROP TABLE IF EXISTS plantilla_suplentes;
@@ -74,6 +76,5 @@ CREATE TABLE puntuaciones (
     jugador_id INT NOT NULL,
     nro_fecha INT NOT NULL,
     nota DECIMAL(4, 2) NOT NULL,
-    UNIQUE KEY uq_jugador_fecha (jugador_id, nro_fecha),
-    FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE
+    UNIQUE KEY uq_jugador_fecha (jugador_id, nro_fecha)
 );

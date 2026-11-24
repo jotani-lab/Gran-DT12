@@ -1,0 +1,13 @@
+TO DO PUNTUACIONES
+
+agregarle nombre del jugador
+
+agregarle numero de mes
+O
+cambiar nro_fecha por dateonly
+
+cambiar id por idPuntuacion
+
+endpoint de agregar puntaje (jugador ID, fecha, nota) no tiene permiso para modificar tabla
+
+-----------------------------

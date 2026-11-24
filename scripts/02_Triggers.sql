@@ -1,5 +1,5 @@
 -- 02 Triggers.sql - Trigger para validar máximo 32 equipos
-USE gran_et12;
+USE 5to_GranDT12;
 
 DELIMITER //
 

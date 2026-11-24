@@ -1,5 +1,5 @@
 -- 01 SP.sql - Procedimientos Almacenados
-USE gran_et12;
+USE 5to_GranDT12;
 
 DELIMITER //
 
