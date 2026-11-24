@@ -13,9 +13,11 @@ public class RepoPuntuacion : IRepoPuntuacion
     {
         using var conn = _db.CreateConnection();
         string sql = @"INSERT INTO puntuaciones (jugador_id, nro_fecha, nota) 
-                       VALUES (@JugadorId, @NroFecha, @Nota)
-                       ON DUPLICATE KEY UPDATE nota = @Nota;";
+                       VALUES (@JugadorId, @NroFecha, @Nota)";
         int rows = conn.Execute(sql, puntuacion);
+        if (rows > 0)
+            puntuacion.Id = checked((int)conn.ExecuteScalar<long>("SELECT LAST_INSERT_ID()"));
+
         return rows > 0;
     }
 

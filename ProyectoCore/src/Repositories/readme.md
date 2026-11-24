@@ -6,7 +6,7 @@ COMANDOS Y UBICACIONES PARA CONECTAR LA BASE DE DATOS
 
 
 La app está configurada para usar la base de datos:
-- Nombre: gran_et12
+- Nombre: 5to_GranDT12
 - Usuario: 5to_agbd
 - Password: Trigg3rs!
 - Servidor: localhost
@@ -17,7 +17,7 @@ Archivo de configuración de la API:
 
 
 Cadena de conexión esperada:
- `DefaultConnection": "Server=localhost;Database=gran_et12;Uid=5to_agbd;Pwd=Trigg3rs!;`
+ `DefaultConnection": "Server=localhost;Database=5to_GranDT12;Uid=5to_agbd;Pwd=Trigg3rs!;`
 
 
 Archivo de conexión en la API:
@@ -27,7 +27,7 @@ Archivo de conexión en la API:
 Allí se usa:
 ``` csharp
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-   ?? "Server=localhost;Database=gran_et12;User ID=5to_agbd;Password=Trigg3rs!;";
+   ?? "Server=localhost;Database=5to_GranDT12;User ID=5to_agbd;Password=Trigg3rs!;";
 ```
 
 
@@ -41,8 +41,8 @@ Ejecuta esto:
 
 
 ```sql
-CREATE DATABASE IF NOT EXISTS gran_et12;
-USE gran_et12;
+CREATE DATABASE IF NOT EXISTS 5to_GranDT12;
+USE 5to_GranDT12;
 
 
 -- Luego ejecuta el archivo SQL del proyecto:
@@ -59,7 +59,7 @@ mysql -u5to_agbd -pTrigg3rs! < "/home/et12alumno/Documentos/GranDT12-V5-main/gra
 3) VERIFICAR QUE LA BASE EXISTE
 ```bash
 mysql -u5to_agbd -pTrigg3rs! -e "SHOW DATABASES;"
-mysql -u5to_agbd -pTrigg3rs! -e "USE gran_et12; SHOW TABLES;"
+mysql -u5to_agbd -pTrigg3rs! -e "USE 5to_GranDT12; SHOW TABLES;"
 ```
 4) VERIFICAR QUE EL PROGRAMA SE CONECTA
 
@@ -77,8 +77,8 @@ Si la conexión funciona, la API arranca sin errores de MySQL.
 5) SQL PARA CREAR LA BASE SI HACE FALTA
 
 
-CREATE DATABASE IF NOT EXISTS gran_et12;
-USE gran_et12;
+CREATE DATABASE IF NOT EXISTS 5to_GranDT12;
+USE 5to_GranDT12;
 
 
 DROP TABLE IF EXISTS puntuaciones;
@@ -181,7 +181,7 @@ CREATE TABLE puntuaciones (
 Si quieres conectar la app y la base:
 
 
-- Crear la base gran_et12
+- Crear la base 5to_GranDT12
 - Usar usuario 5to_agbd
 - Password Trigg3rs!
 - Conectar en localhost

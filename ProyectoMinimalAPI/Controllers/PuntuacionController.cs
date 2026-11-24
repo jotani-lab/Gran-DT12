@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
 
@@ -28,17 +29,7 @@ public class PuntuacionController : ControllerBase
    [HttpPost]
    public IActionResult Post([FromBody] Puntuacion puntuacion)
    {
-       try
-       {
-           bool ok = _service.RegistrarPuntuacion(puntuacion);
-           return ok
-               ? Ok(new { message = "Puntuación registrada con éxito." })
-               : BadRequest(new { error = "No se pudo registrar la puntuación." });
-       }
-       catch (Exception ex)
-       {
-           return BadRequest(new { error = ex.Message });
-       }
+       return Registrar(puntuacion);
    }
 
 
@@ -55,15 +46,38 @@ public class PuntuacionController : ControllerBase
                Nota = nota
            };
 
+           return Registrar(puntuacion);
+       }
+       catch (ArgumentException ex)
+       {
+           return BadRequest(new { error = ex.Message });
+       }
+   }
 
+   private IActionResult Registrar(Puntuacion puntuacion)
+   {
+       try
+       {
            bool ok = _service.RegistrarPuntuacion(puntuacion);
            return ok
                ? Ok(new { message = "Puntuación registrada con éxito.", puntuacion })
                : BadRequest(new { error = "No se pudo registrar la puntuación." });
        }
-       catch (Exception ex)
+       catch (ArgumentException ex)
        {
            return BadRequest(new { error = ex.Message });
+       }
+       catch (MySqlException ex) when (ex.Number == 1062)
+       {
+           return Conflict(new { error = "Ese jugador ya tiene una puntuación registrada para esa fecha." });
+       }
+       catch (MySqlException ex) when (ex.Number == 1452)
+       {
+           return BadRequest(new { error = "No existe el jugador indicado." });
+       }
+       catch (Exception)
+       {
+           return StatusCode(500, new { error = "Ocurrió un error interno al registrar la puntuación." });
        }
    }
 }

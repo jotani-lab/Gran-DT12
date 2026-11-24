@@ -14,6 +14,11 @@ public class ServicePuntuacion
 
    public bool RegistrarPuntuacion(Puntuacion puntuacion)
    {
+       ArgumentNullException.ThrowIfNull(puntuacion);
+
+       if (puntuacion.JugadorId <= 0)
+           throw new ArgumentOutOfRangeException(nameof(puntuacion.JugadorId), "El ID del jugador debe ser mayor a 0.");
+
        if (puntuacion.NroFecha <= 0 || puntuacion.NroFecha >= 50)
            throw new ArgumentOutOfRangeException(nameof(puntuacion.NroFecha), "El número de fecha debe ser menor a 50.");
 
