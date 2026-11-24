@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-
 namespace ProyectoCore.Models;
 
 public class Usuario

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
@@ -32,9 +33,23 @@ public class JugadorController : ControllerBase
     [HttpDelete("borrar")]
     public IActionResult Borrar([FromBody] BorrarPorIdRequest request)
     {
-        var jugador = BorrarEntidad(request);
-        var id = _service.BorrarPorId(jugador);
-        return id == 0 ? NotFound() : Ok(id);
+        if (request == null)
+            return BadRequest(new { error = "Los datos del jugador son obligatorios." });
+
+        try
+        {
+            var jugador = BorrarEntidad(request);
+            var filasEliminadas = _service.BorrarPorId(jugador);
+            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1451)
+        {
+            return Conflict(new { error = "No se puede eliminar el jugador porque tiene puntuaciones o plantillas relacionadas." });
+        }
     }
 
     [HttpPost]
@@ -50,9 +65,17 @@ public class JugadorController : ControllerBase
             int id = _service.Crear(jugador);
             return CreatedAtAction(nameof(GetById), new { id }, jugador);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1452)
+        {
+            return BadRequest(new { error = "El equipo o la posición indicada no existe." });
+        }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(new { error = "El jugador ya está registrado." });
         }
     }
 

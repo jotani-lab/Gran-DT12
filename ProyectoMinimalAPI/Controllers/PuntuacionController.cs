@@ -110,10 +110,6 @@ public class PuntuacionController : ControllerBase
        {
            return BadRequest(new { error = "No existe el jugador indicado." });
        }
-       catch (Exception)
-       {
-           return StatusCode(500, new { error = "Ocurrió un error interno al registrar la puntuación." });
-       }
    }
 
    [HttpPut("{idPuntuacion}")]
@@ -139,10 +135,6 @@ public class PuntuacionController : ControllerBase
        {
            return BadRequest(new { error = "No existe el jugador indicado." });
        }
-       catch (Exception)
-       {
-           return StatusCode(500, new { error = "Ocurrió un error interno al actualizar la puntuación." });
-       }
    }
 
    [HttpDelete("{idPuntuacion}")]
@@ -157,10 +149,6 @@ public class PuntuacionController : ControllerBase
        catch (ArgumentException ex)
        {
            return BadRequest(new { error = ex.Message });
-       }
-       catch (Exception)
-       {
-           return StatusCode(500, new { error = "Ocurrió un error interno al eliminar la puntuación." });
        }
    }
 }

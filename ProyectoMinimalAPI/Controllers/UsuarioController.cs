@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
@@ -32,6 +33,9 @@ public class UsuarioController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest req)
     {
+        if (req == null || string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
+            return BadRequest(new { error = "Email y contraseña son obligatorios." });
+
         var user = _service.Login(req.Email, req.Password);
         if (user == null) return Unauthorized(new { error = "Credenciales inválidas." });
         return Ok(user);
@@ -40,6 +44,9 @@ public class UsuarioController : ControllerBase
     [HttpPost("registro")]
     public IActionResult Registro([FromBody] RegistroRequest req)
     {
+        if (req == null)
+            return BadRequest(new { error = "Los datos del usuario son obligatorios." });
+
         try
         {
             var usuario = new Usuario
@@ -57,27 +64,41 @@ public class UsuarioController : ControllerBase
             int id = _service.Registrar(usuario, req.Password);
             return Ok(new { id, message = "Usuario registrado correctamente." });
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(new { error = "Ya existe un usuario registrado con ese email." });
         }
     }
 
     [HttpDelete("borrar")]
     public IActionResult Borrar([FromBody] BorrarUsuarioPorIdRequest request)
     {
+        if (request == null)
+            return BadRequest(new { error = "Los datos del usuario son obligatorios." });
+
         try
         {
-            if (request == null)
-                return BadRequest(new { error = "Los datos del usuario son obligatorios." });
-
             var usuario = CrearEntidad(request);
-            var filasEliminadas = _service.BorrarPorId(usuario);
-            return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
+            var noEncontrado = _service.BorrarPorId(usuario);
+            return noEncontrado
+                ? NotFound(new { error = "No existe el usuario indicado." })
+                : Ok(new { message = "Usuario eliminado correctamente." });
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1451)
+        {
+            return Conflict(new { error = "No se puede eliminar el usuario porque tiene datos relacionados." });
         }
     }
 

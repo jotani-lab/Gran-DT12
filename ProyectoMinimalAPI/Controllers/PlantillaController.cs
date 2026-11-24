@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
@@ -34,7 +35,7 @@ public class PlantillaController : ControllerBase
             return NotFound();
 
         try { return Ok(_service.PuntajeFecha(plantilla, nroFecha)); }
-        catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+        catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
     }
 
     [HttpPost("verificar")]
@@ -57,9 +58,17 @@ public class PlantillaController : ControllerBase
             int id = _service.Crear(plantilla);
             return Ok(new { id, message = "Plantilla creada correctamente." });
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1452)
+        {
+            return BadRequest(new { error = "No existe el usuario indicado." });
+        }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(new { error = "El usuario ya tiene una plantilla registrada." });
         }
     }
 
@@ -72,9 +81,13 @@ public class PlantillaController : ControllerBase
             var filasEliminadas = _service.BorrarPorId(plantilla);
             return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1451)
+        {
+            return Conflict(new { error = "No se puede eliminar la plantilla por sus datos relacionados." });
         }
     }
 

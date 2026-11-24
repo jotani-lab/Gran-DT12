@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.Services;
 
 namespace ProyectoMinimalAPI.Controllers;
@@ -22,6 +23,14 @@ public class PlantillaSuplenteController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(new { error = "El jugador ya está asignado como suplente en esa plantilla." });
+        }
+        catch (MySqlException ex) when (ex.Number == 1452)
+        {
+            return BadRequest(new { error = "La plantilla o el jugador indicado no existe." });
+        }
     }
 
     [HttpDelete("{plantillaId}/{jugadorId}")]
@@ -35,6 +44,10 @@ public class PlantillaSuplenteController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1452)
+        {
+            return BadRequest(new { error = "La plantilla o el jugador indicado no existe." });
         }
     }
 }

@@ -18,28 +18,36 @@ public class ServicePlantillaSuplente
         _repoJugador = repoJugador;
     }
 
-    private void ValidarIds(int plantillaId, int jugadorId)
+    private List<string> ValidarIds(int plantillaId, int jugadorId)
     {
+        var errores = new List<string>();
+
         if (plantillaId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(plantillaId), "El ID de la plantilla debe ser mayor a 0.");
+            errores.Add("El ID de la plantilla debe ser mayor a 0.");
         if (jugadorId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(jugadorId), "El ID del jugador debe ser mayor a 0.");
-        if (_repoPlantilla.ObtenerPorId(plantillaId) == null)
-            throw new ArgumentException("La plantilla indicada no existe.", nameof(plantillaId));
-        if (_repoJugador.ObtenerPorId(jugadorId) == null)
-            throw new ArgumentException("El jugador indicado no existe.", nameof(jugadorId));
+            errores.Add("El ID del jugador debe ser mayor a 0.");
+        if (plantillaId > 0 && _repoPlantilla.ObtenerPorId(plantillaId) == null)
+            errores.Add("La plantilla indicada no existe.");
+        if (jugadorId > 0 && _repoJugador.ObtenerPorId(jugadorId) == null)
+            errores.Add("El jugador indicado no existe.");
+
+        return errores;
     }
 
     //to do : agregar validaciones de existencia de plantilla y jugador antes de agregar o remover titulares
     public bool AgregarSuplente(int plantillaId, int jugadorId)
     {
-        ValidarIds(plantillaId, jugadorId);
+        var errores = ValidarIds(plantillaId, jugadorId);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores));
         return _repo.AgregarSuplente(plantillaId, jugadorId);
     }
 
     public bool RemoverSuplente(int plantillaId, int jugadorId)
     {
-        ValidarIds(plantillaId, jugadorId);
+        var errores = ValidarIds(plantillaId, jugadorId);
+        if (errores.Count > 0)
+            throw new ArgumentException(string.Join(" ", errores));
         return _repo.RemoverSuplente(plantillaId, jugadorId);
     }
 }

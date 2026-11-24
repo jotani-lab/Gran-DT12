@@ -1,9 +1,5 @@
-TO DO PUNTUACIONES
+TO DO para aprobar
 
-agregarle nombre del jugador
+implementar estrategia de patrones para el cifrado de contraseñas / sacarle el trabajo de cifrarlas a Service.
 
-agregarle numero de mes
-
-cambiar id por idPuntuacion
-
------------------------------
+hacer que en los controller, los try catch sean menos generales y den un codigo de error que tenga sentido

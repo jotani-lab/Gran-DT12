@@ -10,36 +10,50 @@ public class ServicePuntuacion
    private readonly IRepoPuntuacion _repo;
    public ServicePuntuacion(IRepoPuntuacion repo) { _repo = repo; }
 
-   private static void Validar(Puntuacion puntuacion)
+   public List<string> Validar(Puntuacion puntuacion)
    {
-       ArgumentNullException.ThrowIfNull(puntuacion);
+       var errores = new List<string>();
+
+       if (puntuacion is null)
+       {
+           errores.Add("Se debe ingresar una puntuación.");
+           return errores;
+       }
 
        if (puntuacion.JugadorId <= 0)
-           throw new ArgumentOutOfRangeException(nameof(puntuacion.JugadorId), "El ID del jugador debe ser mayor a 0.");
+           errores.Add("El ID del jugador debe ser mayor a 0.");
 
        if (puntuacion.NroMes <= 0 || puntuacion.NroMes > 12)
-           throw new ArgumentOutOfRangeException(nameof(puntuacion.NroMes), "El número de mes debe estar entre 1 y 12.");
+           errores.Add("El número de mes debe estar entre 1 y 12.");
 
        if (puntuacion.NroFecha <= 0 || puntuacion.NroFecha >= 50)
-           throw new ArgumentOutOfRangeException(nameof(puntuacion.NroFecha), "El número de fecha debe ser menor a 50.");
+           errores.Add("El número de fecha debe ser menor a 50.");
 
 
        if (puntuacion.Nota < 1.0m || puntuacion.Nota > 10.0m)
-           throw new ArgumentOutOfRangeException(nameof(puntuacion.Nota), "La nota debe ser decimal entre 1.0 y 10.0.");
+           errores.Add("La nota debe ser decimal entre 1.0 y 10.0.");
+
+       return errores;
    }
 
    public bool RegistrarPuntuacion(Puntuacion puntuacion)
    {
-       Validar(puntuacion);
+       var errores = Validar(puntuacion);
+       if (errores.Count > 0)
+           throw new ArgumentException(string.Join(" ", errores), nameof(puntuacion));
+
        return _repo.RegistrarPuntuacion(puntuacion);
    }
 
    public bool ActualizarPuntuacion(Puntuacion puntuacion)
    {
-       Validar(puntuacion);
-       if (puntuacion.IdPuntuacion <= 0)
-           throw new ArgumentOutOfRangeException(nameof(puntuacion.IdPuntuacion), "El ID de la puntuación debe ser mayor a 0.");
-       return _repo.ActualizarPuntuacion(puntuacion);
+       var errores = Validar(puntuacion);
+       if (puntuacion is not null && puntuacion.IdPuntuacion <= 0)
+           errores.Add("El ID de la puntuación debe ser mayor a 0.");
+       if (errores.Count > 0)
+           throw new ArgumentException(string.Join(" ", errores), nameof(puntuacion));
+
+    return _repo.ActualizarPuntuacion(puntuacion!);
    }
 
    public bool BorrarPorId(int idPuntuacion)

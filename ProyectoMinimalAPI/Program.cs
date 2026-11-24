@@ -1,5 +1,6 @@
 using ProyectoCore.Repositories.Interfaces;
 using ProyectoCore.Repositories.RepoClase;
+using ProyectoCore.Security;
 using ProyectoCore.Services;
 using Scalar.AspNetCore;
 
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IRepoPlantillaSuplente, RepoPlantillaSuplente>();
 builder.Services.AddScoped<IRepoPuntuacion, RepoPuntuacion>();
 
 // Registrar Servicios
+builder.Services.AddSingleton<IEncriptador, Encriptador256>();
 builder.Services.AddScoped<ServicePosicion>();
 builder.Services.AddScoped<ServiceEquipo>();
 builder.Services.AddScoped<ServiceJugador>();

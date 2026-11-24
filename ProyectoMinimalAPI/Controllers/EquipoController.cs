@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using ProyectoCore.DTOs;
 using ProyectoCore.Models;
 using ProyectoCore.Services;
@@ -22,11 +23,18 @@ public class EquipoController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var res = _service.ObtenerPorId(id);
-        return res == null ? BadRequest() : Ok(res);
+        try
+        {
+            var res = _service.ObtenerPorId(id);
+            return res == null ? NotFound() : Ok(res);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
-    [HttpPost("verificar")]
+    //[HttpPost("verificar")]
     public IActionResult Verificar([FromBody] CrearEquipoRequest request)
     {
         var equipo = CrearEntidad(request);
@@ -46,9 +54,13 @@ public class EquipoController : ControllerBase
             int id = _service.Crear(equipo);
             return CreatedAtAction(nameof(GetById), new { id }, equipo);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(new { error = "Ya existe un equipo con ese nombre." });
         }
 
     }
@@ -61,14 +73,21 @@ public class EquipoController : ControllerBase
     [HttpDelete("borrar")]
     public IActionResult Borrar([FromBody] BorrarEquipoPorIdRequest request)
     {
+        if (request == null)
+            return BadRequest(new { error = "Los datos del equipo son obligatorios." });
+
         try
         {
             var filasEliminadas = _service.BorrarPorId(BorrarEntidad(request));
             return filasEliminadas == 0 ? NotFound() : Ok(filasEliminadas);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(new { error = ex.Message });
+        }
+        catch (MySqlException ex) when (ex.Number == 1451)
+        {
+            return Conflict(new { error = "No se puede eliminar el equipo porque tiene jugadores relacionados." });
         }
     }
 
