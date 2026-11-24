@@ -9,22 +9,83 @@ public class RepoPuntuacion : IRepoPuntuacion
     private readonly DBConnection _db;
     public RepoPuntuacion(DBConnection db) { _db = db; }
 
+    private const string SelectSql = @"
+        SELECT p.id AS IdPuntuacion,
+               p.jugadorId AS JugadorId,
+               CONCAT(j.nombre, ' ', j.apellido) AS NombreJugador,
+               p.nroMes AS NroMes,
+               p.nroFecha AS NroFecha,
+               p.nota AS Nota
+        FROM Puntuacion p
+        INNER JOIN Jugador j ON j.id = p.jugadorId";
+
     public bool RegistrarPuntuacion(Puntuacion puntuacion)
     {
         using var conn = _db.CreateConnection();
-        string sql = @"INSERT INTO puntuaciones (jugador_id, nro_fecha, nota) 
-                       VALUES (@JugadorId, @NroFecha, @Nota)";
-        int rows = conn.Execute(sql, puntuacion);
-        if (rows > 0)
-            puntuacion.Id = checked((int)conn.ExecuteScalar<long>("SELECT LAST_INSERT_ID()"));
+        const string sql = @"
+            INSERT INTO Puntuacion (jugadorId, nroMes, nroFecha, nota)
+            VALUES (@JugadorId, @NroMes, @NroFecha, @Nota)
+            ON DUPLICATE KEY UPDATE nota = @Nota;
+            SELECT id FROM Puntuacion
+            WHERE jugadorId = @JugadorId AND nroMes = @NroMes AND nroFecha = @NroFecha;";
 
-        return rows > 0;
+        var id = conn.ExecuteScalar<long>(sql, puntuacion);
+        if (id > 0)
+            puntuacion.IdPuntuacion = checked((int)id);
+
+        return id > 0;
+    }
+
+    public bool ActualizarPuntuacion(Puntuacion puntuacion)
+    {
+        using var conn = _db.CreateConnection();
+        const string sql = @"
+            UPDATE Puntuacion
+            SET jugadorId = @JugadorId, nroMes = @NroMes,
+                nroFecha = @NroFecha, nota = @Nota
+            WHERE id = @IdPuntuacion";
+        return conn.Execute(sql, puntuacion) > 0;
+    }
+
+    public bool BorrarPorId(int idPuntuacion)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Execute("DELETE FROM Puntuacion WHERE id = @idPuntuacion", new { idPuntuacion }) > 0;
+    }
+
+    public Puntuacion? ObtenerPorId(int idPuntuacion)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.QueryFirstOrDefault<Puntuacion>(SelectSql + " WHERE p.id = @idPuntuacion", new { idPuntuacion });
+    }
+
+    public List<Puntuacion> ObtenerTodas()
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Query<Puntuacion>(SelectSql + " ORDER BY p.nroMes, p.nroFecha, p.id").ToList();
     }
 
     public List<Puntuacion> ObtenerPorJugadorId(int jugadorId)
     {
         using var conn = _db.CreateConnection();
-        string sql = "SELECT id AS Id, jugador_id AS JugadorId, nro_fecha AS NroFecha, nota AS Nota FROM puntuaciones WHERE jugador_id = @jugadorId";
-        return conn.Query<Puntuacion>(sql, new { jugadorId }).ToList();
+        return conn.Query<Puntuacion>(
+            SelectSql + " WHERE p.jugadorId = @jugadorId ORDER BY p.nroMes, p.nroFecha",
+            new { jugadorId }).ToList();
+    }
+
+    public List<Puntuacion> ObtenerPorMes(int nroMes)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.Query<Puntuacion>(
+            SelectSql + " WHERE p.nroMes = @nroMes ORDER BY p.nroFecha, p.jugadorId",
+            new { nroMes }).ToList();
+    }
+
+    public Puntuacion? ObtenerPorJugadorMesFecha(int jugadorId, int nroMes, int nroFecha)
+    {
+        using var conn = _db.CreateConnection();
+        return conn.QueryFirstOrDefault<Puntuacion>(
+            SelectSql + " WHERE p.jugadorId = @jugadorId AND p.nroMes = @nroMes AND p.nroFecha = @nroFecha",
+            new { jugadorId, nroMes, nroFecha });
     }
 }

@@ -12,12 +12,12 @@ public class RepoPosicion : IRepoPosicion
     public List<Posicion> ObtenerTodas()
     {
         using var conn = _db.CreateConnection();
-        return conn.Query<Posicion>("SELECT id AS Id, nombre AS Nombre FROM posiciones").ToList();
+        return conn.Query<Posicion>("SELECT id AS Id, nombre AS Nombre FROM Posicion").ToList();
     }
 
     public Posicion? ObtenerPorId(int id)
     {
         using var conn = _db.CreateConnection();
-        return conn.QueryFirstOrDefault<Posicion>("SELECT id AS Id, nombre AS Nombre FROM posiciones WHERE id = @id", new { id });
+        return conn.QueryFirstOrDefault<Posicion>("SELECT id AS Id, nombre AS Nombre FROM Posicion WHERE id = @id", new { id });
     }
 }

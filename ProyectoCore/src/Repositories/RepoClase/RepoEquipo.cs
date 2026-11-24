@@ -12,31 +12,31 @@ public class RepoEquipo : IRepoEquipo
     public List<Equipo> ObtenerTodos()
     {
         using var conn = _db.CreateConnection();
-        return conn.Query<Equipo>("SELECT id AS Id, nombre AS Nombre FROM equipos").ToList();
+        return conn.Query<Equipo>("SELECT id AS Id, nombre AS Nombre FROM Equipo").ToList();
     }
 
     public Equipo? ObtenerPorId(int id)
     {
         using var conn = _db.CreateConnection();
-        return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM equipos WHERE id = @id", new { id });
+        return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM Equipo WHERE id = @id", new { id });
     }
 
     public int Crear(Equipo equipo)
     {
         using var conn = _db.CreateConnection();
-        string sql = "INSERT INTO equipos (nombre) VALUES (@Nombre); SELECT LAST_INSERT_ID();";
+        string sql = "INSERT INTO Equipo (nombre) VALUES (@Nombre); SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, equipo);
     }
 
     public Equipo? ObtenerPorNombre(string nombre)
     {
         using var conn = _db.CreateConnection();
-        return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM equipos WHERE nombre = @Nombre", new { nombre });
+        return conn.QueryFirstOrDefault<Equipo>("SELECT id AS Id, nombre AS Nombre FROM Equipo WHERE nombre = @Nombre", new { nombre });
     }
     public int BorrarPorId(Equipo equipo)
     {
         using var conn = _db.CreateConnection();
-        const string sql = "DELETE FROM equipos WHERE id = @Id";
+        const string sql = "DELETE FROM Equipo WHERE id = @Id";
         return conn.Execute(sql, equipo);
     }
 }

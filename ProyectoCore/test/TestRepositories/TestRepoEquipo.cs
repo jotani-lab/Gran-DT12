@@ -7,7 +7,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoEquipo
 {
     [MySqlFact]
-    public void CrearYConsultar_UsaTablaEquipos()
+    public void CrearYConsultar_UsaTablaEquipo()
     {
         using var db = new TestRepositorioSupport();
         var repo = new RepoEquipo(db.Db);

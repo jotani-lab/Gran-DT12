@@ -28,8 +28,10 @@ public class Jugador
 
     public void AgregarPuntuacion(Puntuacion puntuacion)
     {
-        if (Puntuaciones.Any(p => p.NroFecha == puntuacion.NroFecha))
-            throw new InvalidOperationException($"El jugador ya tiene puntuación registrada para la fecha {puntuacion.NroFecha}.");
+        ArgumentNullException.ThrowIfNull(puntuacion);
+
+        if (Puntuaciones.Any(p => p.NroMes == puntuacion.NroMes && p.NroFecha == puntuacion.NroFecha))
+            throw new InvalidOperationException($"El jugador ya tiene puntuación registrada para el mes {puntuacion.NroMes}, fecha {puntuacion.NroFecha}.");
         Puntuaciones.Add(puntuacion);
     }
 

@@ -81,88 +81,92 @@ CREATE DATABASE IF NOT EXISTS 5to_GranDT12;
 USE 5to_GranDT12;
 
 
-DROP TABLE IF EXISTS puntuaciones;
-DROP TABLE IF EXISTS plantilla_suplentes;
-DROP TABLE IF EXISTS plantilla_titulares;
-DROP TABLE IF EXISTS plantillas;
-DROP TABLE IF EXISTS jugadores;
-DROP TABLE IF EXISTS usuarios;
-DROP TABLE IF EXISTS equipos;
-DROP TABLE IF EXISTS posiciones;
+DROP TABLE IF EXISTS Puntuacion;
+DROP TABLE IF EXISTS PlantillaSuplente;
+DROP TABLE IF EXISTS PlantillaTitular;
+DROP TABLE IF EXISTS Plantilla;
+DROP TABLE IF EXISTS Jugador;
+DROP TABLE IF EXISTS Usuario;
+DROP TABLE IF EXISTS Equipo;
+DROP TABLE IF EXISTS Posicion;
 
 
-CREATE TABLE posiciones (
+CREATE TABLE Posicion (
    id INT AUTO_INCREMENT PRIMARY KEY,
    nombre VARCHAR(50) NOT NULL UNIQUE
 );
 
 
-CREATE TABLE equipos (
+CREATE TABLE Equipo (
    id INT AUTO_INCREMENT PRIMARY KEY,
    nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
 
-CREATE TABLE usuarios (
+CREATE TABLE Usuario (
    id INT AUTO_INCREMENT PRIMARY KEY,
    nombre VARCHAR(100) NOT NULL,
    apellido VARCHAR(100) NOT NULL,
    email VARCHAR(150) NOT NULL UNIQUE,
-   fecha_nacimiento DATE NOT NULL,
-   password_hash VARCHAR(64) NOT NULL,
-   es_admin TINYINT(1) NOT NULL DEFAULT 0
+   fechaNacimiento DATE NOT NULL,
+   passwordHash VARCHAR(64) NOT NULL,
+   esAdmin TINYINT(1) NOT NULL DEFAULT 0
 );
 
 
-CREATE TABLE jugadores (
+CREATE TABLE Jugador (
    id INT AUTO_INCREMENT PRIMARY KEY,
    nombre VARCHAR(100) NOT NULL,
    apellido VARCHAR(100) NOT NULL,
    apodo VARCHAR(100) NULL,
-   fecha_nacimiento DATE NOT NULL,
-   equipo_id INT NOT NULL,
-   posicion_id INT NOT NULL,
+   fechaNacimiento DATE NOT NULL,
+   equipoId INT NOT NULL,
+   posicionId INT NOT NULL,
    cotizacion DECIMAL(10, 2) NOT NULL,
-   FOREIGN KEY (equipo_id) REFERENCES equipos(id),
-   FOREIGN KEY (posicion_id) REFERENCES posiciones(id)
+   FOREIGN KEY (equipoId) REFERENCES Equipo(id),
+   FOREIGN KEY (posicionId) REFERENCES Posicion(id)
 );
 
 
-CREATE TABLE plantillas (
+CREATE TABLE Plantilla (
    id INT AUTO_INCREMENT PRIMARY KEY,
-   usuario_id INT NOT NULL UNIQUE,
+   usuarioId INT NOT NULL UNIQUE,
    nombre VARCHAR(100) NOT NULL,
-   presupuesto_maximo DECIMAL(12, 2) NOT NULL DEFAULT 100000000.00,
-   cantidad_maxima_jugadores INT NOT NULL DEFAULT 20,
-   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+   presupuestoMaximo DECIMAL(12, 2) NOT NULL DEFAULT 100000000.00,
+   cantidadMaximaJugadores INT NOT NULL DEFAULT 20,
+   FOREIGN KEY (usuarioId) REFERENCES Usuario(id) ON DELETE CASCADE
 );
 
 
-CREATE TABLE plantilla_titulares (
-   plantilla_id INT NOT NULL,
-   jugador_id INT NOT NULL,
-   PRIMARY KEY (plantilla_id, jugador_id),
-   FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE,
-   FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
+CREATE TABLE PlantillaTitular (
+   plantillaId INT NOT NULL,
+   jugadorId INT NOT NULL,
+   PRIMARY KEY (plantillaId, jugadorId),
+   FOREIGN KEY (plantillaId) REFERENCES Plantilla(id) ON DELETE CASCADE,
+   FOREIGN KEY (jugadorId) REFERENCES Jugador(id)
 );
 
 
-CREATE TABLE plantilla_suplentes (
-   plantilla_id INT NOT NULL,
-   jugador_id INT NOT NULL,
-   PRIMARY KEY (plantilla_id, jugador_id),
-   FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE,
-   FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
+CREATE TABLE PlantillaSuplente (
+   plantillaId INT NOT NULL,
+   jugadorId INT NOT NULL,
+   PRIMARY KEY (plantillaId, jugadorId),
+   FOREIGN KEY (plantillaId) REFERENCES Plantilla(id) ON DELETE CASCADE,
+   FOREIGN KEY (jugadorId) REFERENCES Jugador(id)
 );
 
 
-CREATE TABLE puntuaciones (
+CREATE TABLE Puntuacion (
    id INT AUTO_INCREMENT PRIMARY KEY,
-   jugador_i```bashd INT NOT NULL,
-   nro_fecha INT NOT NULL,
+   jugadorId INT NOT NULL,
+   nroMes INT NOT NULL,
+   nroFecha INT NOT NULL,
    nota DECIMAL(4, 2) NOT NULL,
-   UNIQUE KEY uq_jugador_fecha (jugador_id, nro_fecha),
-   FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE
+   UNIQUE KEY uqJugadorMesFecha (jugadorId, nroMes, nroFecha),
+   FOREIGN KEY (jugadorId) REFERENCES Jugador(id) ON DELETE CASCADE,
+   CHECK (nroMes BETWEEN 1 AND 12),
+   CHECK (nroFecha BETWEEN 1 AND 49),
+   CHECK (nota BETWEEN 1.0 AND 10.0)
 );
 
 

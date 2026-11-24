@@ -12,28 +12,28 @@ public class RepoUsuario : IRepoUsuario
     public List<Usuario> ObtenerTodos()
     {
         using var conn = _db.CreateConnection();
-        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fecha_nacimiento AS FechaNacimiento, password_hash AS PasswordHash, es_admin AS EsAdmin FROM usuarios";
+        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario";
         return conn.Query<Usuario>(sql).ToList();
     }
 
     public Usuario? ObtenerPorEmail(string email)
     {
         using var conn = _db.CreateConnection();
-        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fecha_nacimiento AS FechaNacimiento, password_hash AS PasswordHash, es_admin AS EsAdmin FROM usuarios WHERE email = @email";
+        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario WHERE email = @email";
         return conn.QueryFirstOrDefault<Usuario>(sql, new { email });
     }
 
     public Usuario? ObtenerPorId(int id)
     {
         using var conn = _db.CreateConnection();
-        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fecha_nacimiento AS FechaNacimiento, password_hash AS PasswordHash, es_admin AS EsAdmin FROM usuarios WHERE id = @id";
+        string sql = "SELECT id AS Id, nombre AS Nombre, apellido AS Apellido, email AS Email, fechaNacimiento AS FechaNacimiento, passwordHash AS PasswordHash, esAdmin AS EsAdmin FROM Usuario WHERE id = @id";
         return conn.QueryFirstOrDefault<Usuario>(sql, new { id });
     }
 
     public int Crear(Usuario usuario)
     {
         using var conn = _db.CreateConnection();
-        string sql = @"INSERT INTO usuarios (nombre, apellido, email, fecha_nacimiento, password_hash, es_admin)
+        string sql = @"INSERT INTO Usuario (nombre, apellido, email, fechaNacimiento, passwordHash, esAdmin)
                        VALUES (@Nombre, @Apellido, @Email, @FechaNacimiento, @PasswordHash, @EsAdmin);
                        SELECT LAST_INSERT_ID();";
         return conn.ExecuteScalar<int>(sql, usuario);
@@ -42,7 +42,7 @@ public class RepoUsuario : IRepoUsuario
     public int BorrarPorId(Usuario usuario)
     {
         using var conn = _db.CreateConnection();
-        const string sql = "DELETE FROM usuarios WHERE id = @Id";
+        const string sql = "DELETE FROM Usuario WHERE id = @Id";
         return conn.Execute(sql, usuario);
     }
 }

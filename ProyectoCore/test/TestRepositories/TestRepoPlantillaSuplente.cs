@@ -6,7 +6,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoPlantillaSuplente
 {
     [MySqlFact]
-    public void AgregarYRemoverSuplente_UsaTablaPlantillaSuplentes()
+    public void AgregarYRemoverSuplente_UsaTablaPlantillaSuplente()
     {
         using var db = new TestRepositorioSupport();
         var equipoId = db.CrearEquipo();

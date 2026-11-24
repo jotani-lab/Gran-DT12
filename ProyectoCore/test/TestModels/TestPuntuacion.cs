@@ -20,4 +20,23 @@ public class TestPuntuacion
         Assert.Throws<ArgumentOutOfRangeException>(() => p.NroFecha = 50);
         Assert.Throws<ArgumentOutOfRangeException>(() => p.NroFecha = 0);
     }
+
+    [Fact]
+    public void Puntuacion_MesInvalido_LanzaExcepcion()
+    {
+        var p = new Puntuacion();
+        Assert.Throws<ArgumentOutOfRangeException>(() => p.NroMes = 0);
+        Assert.Throws<ArgumentOutOfRangeException>(() => p.NroMes = 13);
+    }
+
+    [Fact]
+    public void Puntuacion_IdUsaIdPuntuacion()
+    {
+        var p = new Puntuacion { IdPuntuacion = 25 };
+        Assert.Equal(25, p.IdPuntuacion);
+        Assert.Equal(25, p.Id);
+
+        p.Id = 30;
+        Assert.Equal(30, p.IdPuntuacion);
+    }
 }

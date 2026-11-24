@@ -7,7 +7,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoUsuario
 {
     [MySqlFact]
-    public void CrearYConsultar_UsaTablaUsuarios()
+    public void CrearYConsultar_UsaTablaUsuario()
     {
         using var db = new TestRepositorioSupport();
         var repo = new RepoUsuario(db.Db);

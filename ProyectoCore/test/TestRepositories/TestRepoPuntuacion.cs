@@ -7,7 +7,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoPuntuacion
 {
     [MySqlFact]
-    public void RegistrarYConsultar_UsaTablaPuntuaciones()
+    public void RegistrarYConsultar_UsaTablaPuntuacion()
     {
         using var db = new TestRepositorioSupport();
         var equipoId = db.CrearEquipo();
@@ -17,15 +17,20 @@ public class TestRepoPuntuacion
         var puntuacion = new Puntuacion
         {
             JugadorId = jugadorId,
+            NroMes = 11,
             NroFecha = 1,
             Nota = 8.5m
         };
 
         Assert.True(repo.RegistrarPuntuacion(puntuacion));
-        var obtenidas = repo.ObtenerPorJugadorId(jugadorId);
+        Assert.True(puntuacion.IdPuntuacion > 0);
 
+        var obtenidas = repo.ObtenerPorJugadorId(jugadorId);
         var registrada = Assert.Single(obtenidas);
+        Assert.True(registrada.IdPuntuacion > 0);
+        Assert.Equal(11, registrada.NroMes);
         Assert.Equal(1, registrada.NroFecha);
         Assert.Equal(8.5m, registrada.Nota);
+        Assert.False(string.IsNullOrWhiteSpace(registrada.NombreJugador));
     }
 }

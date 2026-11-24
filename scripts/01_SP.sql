@@ -3,35 +3,62 @@ USE 5to_GranDT12;
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS sp_RegistrarPuntuacion //
-CREATE PROCEDURE sp_RegistrarPuntuacion(
-    IN p_jugador_id INT,
-    IN p_nro_fecha INT,
-    IN p_nota DECIMAL(4, 2)
+DROP PROCEDURE IF EXISTS spRegistrarPuntuacion //
+CREATE PROCEDURE spRegistrarPuntuacion(
+    IN pJugadorId INT,
+    IN pNroMes INT,
+    IN pNroFecha INT,
+    IN pNota DECIMAL(4, 2)
 )
 BEGIN
-    IF p_nro_fecha <= 0 OR p_nro_fecha >= 50 THEN
+    IF pNroMes <= 0 OR pNroMes > 12 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El número de mes debe estar entre 1 y 12.';
+    END IF;
+    IF pNroFecha <= 0 OR pNroFecha >= 50 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El número de fecha debe ser menor a 50.';
     END IF;
-    IF p_nota < 1.0 OR p_nota > 10.0 THEN
+    IF pNota < 1.0 OR pNota > 10.0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La nota debe estar entre 1.0 y 10.0.';
     END IF;
 
-    INSERT INTO puntuaciones (jugador_id, nro_fecha, nota)
-    VALUES (p_jugador_id, p_nro_fecha, p_nota)
-    ON DUPLICATE KEY UPDATE nota = p_nota;
+    INSERT INTO Puntuacion (jugadorId, nroMes, nroFecha, nota)
+    VALUES (pJugadorId, pNroMes, pNroFecha, pNota)
+    ON DUPLICATE KEY UPDATE nota = pNota;
 END //
 
-DROP PROCEDURE IF EXISTS sp_CalcularPuntajePlantillaFecha //
-CREATE PROCEDURE sp_CalcularPuntajePlantillaFecha(
-    IN p_plantilla_id INT,
-    IN p_nro_fecha INT
+DROP PROCEDURE IF EXISTS spCalcularPuntajePlantillaFecha //
+CREATE PROCEDURE spCalcularPuntajePlantillaFecha(
+    IN pPlantillaId INT,
+    IN pNroFecha INT
 )
 BEGIN
     SELECT IFNULL(SUM(p.nota), 0) AS puntaje_total
-    FROM plantilla_titulares pt
-    INNER JOIN puntuaciones p ON pt.jugador_id = p.jugador_id
-    WHERE pt.plantilla_id = p_plantilla_id AND p.nro_fecha = p_nro_fecha;
+    FROM PlantillaTitular pt
+    INNER JOIN Puntuacion p ON pt.jugadorId = p.jugadorId
+    WHERE pt.plantillaId = pPlantillaId AND p.nroFecha = pNroFecha;
+END //
+
+DROP PROCEDURE IF EXISTS spCalcularPuntajePlantillaMesFecha //
+CREATE PROCEDURE spCalcularPuntajePlantillaMesFecha(
+    IN pPlantillaId INT,
+    IN pNroMes INT,
+    IN pNroFecha INT
+)
+BEGIN
+    IF pNroMes <= 0 OR pNroMes > 12 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El número de mes debe estar entre 1 y 12.';
+    END IF;
+
+    IF pNroFecha <= 0 OR pNroFecha >= 50 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El número de fecha debe ser menor a 50.';
+    END IF;
+
+    SELECT IFNULL(SUM(p.nota), 0) AS puntaje_total
+    FROM PlantillaTitular pt
+    INNER JOIN Puntuacion p ON pt.jugadorId = p.jugadorId
+        WHERE pt.plantillaId = pPlantillaId
+            AND p.nroMes = pNroMes
+            AND p.nroFecha = pNroFecha;
 END //
 
 DELIMITER ;

@@ -13,14 +13,28 @@ public class PlantillaTitularController : ControllerBase
     [HttpPost("{plantillaId}/{jugadorId}")]
     public IActionResult Add(int plantillaId, int jugadorId)
     {
-        bool ok = _service.AgregarTitular(plantillaId, jugadorId);
-        return ok ? Ok() : BadRequest();
+        try
+        {
+            bool ok = _service.AgregarTitular(plantillaId, jugadorId);
+            return ok ? Ok(new { message = "Titular agregado correctamente." }) : Conflict();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpDelete("{plantillaId}/{jugadorId}")]
     public IActionResult Remove(int plantillaId, int jugadorId)
     {
-        bool ok = _service.RemoverTitular(plantillaId, jugadorId);
-        return ok ? Ok() : BadRequest();
+        try
+        {
+            bool ok = _service.RemoverTitular(plantillaId, jugadorId);
+            return ok ? Ok(new { message = "Titular removido correctamente." }) : NotFound();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 }

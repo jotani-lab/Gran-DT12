@@ -48,7 +48,7 @@ public sealed class TestRepositorioSupport : IDisposable
     public int CrearEquipo()
     {
         var id = Connection.ExecuteScalar<int>(
-            "INSERT INTO equipos (nombre) VALUES (@nombre); SELECT LAST_INSERT_ID();",
+            "INSERT INTO Equipo (nombre) VALUES (@nombre); SELECT LAST_INSERT_ID();",
             new { nombre = $"Equipo-{Guid.NewGuid():N}" });
         _equipoIds.Add(id);
         return id;
@@ -57,7 +57,7 @@ public sealed class TestRepositorioSupport : IDisposable
     public int CrearPosicion()
     {
         var id = Connection.ExecuteScalar<int>(
-            "INSERT INTO posiciones (nombre) VALUES (@nombre); SELECT LAST_INSERT_ID();",
+            "INSERT INTO Posicion (nombre) VALUES (@nombre); SELECT LAST_INSERT_ID();",
             new { nombre = $"Posicion-{Guid.NewGuid():N}" });
         _posicionIds.Add(id);
         return id;
@@ -66,8 +66,8 @@ public sealed class TestRepositorioSupport : IDisposable
     public int CrearUsuario()
     {
         var id = Connection.ExecuteScalar<int>(
-            @"INSERT INTO usuarios (nombre, apellido, email, fecha_nacimiento, password_hash)
-              VALUES (@nombre, 'Integracion', @email, '1990-01-01', REPEAT('a', 64));
+                        @"INSERT INTO Usuario (nombre, apellido, email, fechaNacimiento, passwordHash)
+                            VALUES (@nombre, 'Integracion', @email, '1990-01-01', REPEAT('a', 64));
               SELECT LAST_INSERT_ID();",
             new
             {
@@ -81,7 +81,7 @@ public sealed class TestRepositorioSupport : IDisposable
     public int CrearJugador(int equipoId, int posicionId)
     {
         var id = Connection.ExecuteScalar<int>(
-            @"INSERT INTO jugadores (nombre, apellido, fecha_nacimiento, equipo_id, posicion_id, cotizacion)
+            @"INSERT INTO Jugador (nombre, apellido, fechaNacimiento, equipoId, posicionId, cotizacion)
               VALUES (@nombre, 'Integracion', '1990-01-01', @equipoId, @posicionId, 1234.56);
               SELECT LAST_INSERT_ID();",
             new
@@ -97,7 +97,7 @@ public sealed class TestRepositorioSupport : IDisposable
     public int CrearPlantilla(int usuarioId, int cantidadMaximaJugadores = 20)
     {
         var id = Connection.ExecuteScalar<int>(
-            @"INSERT INTO plantillas (usuario_id, nombre, cantidad_maxima_jugadores)
+            @"INSERT INTO Plantilla (usuarioId, nombre, cantidadMaximaJugadores)
               VALUES (@usuarioId, @nombre, @cantidadMaximaJugadores);
               SELECT LAST_INSERT_ID();",
             new
@@ -116,26 +116,26 @@ public sealed class TestRepositorioSupport : IDisposable
         {
             if (_jugadorIds.Count > 0)
             {
-                Connection.Execute("DELETE FROM puntuaciones WHERE jugador_id IN @ids", new { ids = _jugadorIds });
-                Connection.Execute("DELETE FROM plantilla_titulares WHERE jugador_id IN @ids", new { ids = _jugadorIds });
-                Connection.Execute("DELETE FROM plantilla_suplentes WHERE jugador_id IN @ids", new { ids = _jugadorIds });
+                Connection.Execute("DELETE FROM Puntuacion WHERE jugadorId IN @ids", new { ids = _jugadorIds });
+                Connection.Execute("DELETE FROM PlantillaTitular WHERE jugadorId IN @ids", new { ids = _jugadorIds });
+                Connection.Execute("DELETE FROM PlantillaSuplente WHERE jugadorId IN @ids", new { ids = _jugadorIds });
             }
 
             if (_plantillaIds.Count > 0)
             {
-                Connection.Execute("DELETE FROM plantilla_titulares WHERE plantilla_id IN @ids", new { ids = _plantillaIds });
-                Connection.Execute("DELETE FROM plantilla_suplentes WHERE plantilla_id IN @ids", new { ids = _plantillaIds });
-                Connection.Execute("DELETE FROM plantillas WHERE id IN @ids", new { ids = _plantillaIds });
+                Connection.Execute("DELETE FROM PlantillaTitular WHERE plantillaId IN @ids", new { ids = _plantillaIds });
+                Connection.Execute("DELETE FROM PlantillaSuplente WHERE plantillaId IN @ids", new { ids = _plantillaIds });
+                Connection.Execute("DELETE FROM Plantilla WHERE id IN @ids", new { ids = _plantillaIds });
             }
 
             if (_jugadorIds.Count > 0)
-                Connection.Execute("DELETE FROM jugadores WHERE id IN @ids", new { ids = _jugadorIds });
+                Connection.Execute("DELETE FROM Jugador WHERE id IN @ids", new { ids = _jugadorIds });
             if (_usuarioIds.Count > 0)
-                Connection.Execute("DELETE FROM usuarios WHERE id IN @ids", new { ids = _usuarioIds });
+                Connection.Execute("DELETE FROM Usuario WHERE id IN @ids", new { ids = _usuarioIds });
             if (_equipoIds.Count > 0)
-                Connection.Execute("DELETE FROM equipos WHERE id IN @ids", new { ids = _equipoIds });
+                Connection.Execute("DELETE FROM Equipo WHERE id IN @ids", new { ids = _equipoIds });
             if (_posicionIds.Count > 0)
-                Connection.Execute("DELETE FROM posiciones WHERE id IN @ids", new { ids = _posicionIds });
+                Connection.Execute("DELETE FROM Posicion WHERE id IN @ids", new { ids = _posicionIds });
         }
         finally
         {

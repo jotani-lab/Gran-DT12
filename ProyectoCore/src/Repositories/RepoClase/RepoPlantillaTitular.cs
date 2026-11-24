@@ -11,7 +11,7 @@ public class RepoPlantillaTitular : IRepoPlantillaTitular
     public bool AgregarTitular(int plantillaId, int jugadorId)
     {
         using var conn = _db.CreateConnection();
-        string sql = "INSERT INTO plantilla_titulares (plantilla_id, jugador_id) VALUES (@plantillaId, @jugadorId)";
+        string sql = "INSERT INTO PlantillaTitular (plantillaId, jugadorId) VALUES (@plantillaId, @jugadorId)";
         int rows = conn.Execute(sql, new { plantillaId, jugadorId });
         return rows > 0;
     }
@@ -19,7 +19,7 @@ public class RepoPlantillaTitular : IRepoPlantillaTitular
     public bool RemoverTitular(int plantillaId, int jugadorId)
     {
         using var conn = _db.CreateConnection();
-        string sql = "DELETE FROM plantilla_titulares WHERE plantilla_id = @plantillaId AND jugador_id = @jugadorId";
+        string sql = "DELETE FROM PlantillaTitular WHERE plantillaId = @plantillaId AND jugadorId = @jugadorId";
         int rows = conn.Execute(sql, new { plantillaId, jugadorId });
         return rows > 0;
     }

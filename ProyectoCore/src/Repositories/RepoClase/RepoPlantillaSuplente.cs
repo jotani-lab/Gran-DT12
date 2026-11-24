@@ -11,7 +11,7 @@ public class RepoPlantillaSuplente : IRepoPlantillaSuplente
     public bool AgregarSuplente(int plantillaId, int jugadorId)
     {
         using var conn = _db.CreateConnection();
-        string sql = "INSERT INTO plantilla_suplentes (plantilla_id, jugador_id) VALUES (@plantillaId, @jugadorId)";
+        string sql = "INSERT INTO PlantillaSuplente (plantillaId, jugadorId) VALUES (@plantillaId, @jugadorId)";
         int rows = conn.Execute(sql, new { plantillaId, jugadorId });
         return rows > 0;
     }
@@ -19,7 +19,7 @@ public class RepoPlantillaSuplente : IRepoPlantillaSuplente
     public bool RemoverSuplente(int plantillaId, int jugadorId)
     {
         using var conn = _db.CreateConnection();
-        string sql = "DELETE FROM plantilla_suplentes WHERE plantilla_id = @plantillaId AND jugador_id = @jugadorId";
+        string sql = "DELETE FROM PlantillaSuplente WHERE plantillaId = @plantillaId AND jugadorId = @jugadorId";
         int rows = conn.Execute(sql, new { plantillaId, jugadorId });
         return rows > 0;
     }

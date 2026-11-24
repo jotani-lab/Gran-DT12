@@ -18,11 +18,46 @@ public class PuntuacionController : ControllerBase
    [HttpGet("jugador/{jugadorId}")]
    public IActionResult GetByJugador(int jugadorId)
    {
-       if (jugadorId <= 0)
-           return BadRequest(new { error = "El ID del jugador debe ser mayor a 0." });
+       try
+       {
+           return Ok(_service.ObtenerPorJugadorId(jugadorId));
+       }
+       catch (ArgumentException ex)
+       {
+           return BadRequest(new { error = ex.Message });
+       }
+   }
 
+   [HttpGet]
+   public IActionResult GetAll() => Ok(_service.ObtenerTodas());
 
-       return Ok(_service.ObtenerPorJugadorId(jugadorId));
+   [HttpGet("{idPuntuacion}")]
+   public IActionResult GetById(int idPuntuacion)
+   {
+       try
+       {
+           var puntuacion = _service.ObtenerPorId(idPuntuacion);
+           return puntuacion == null ? NotFound() : Ok(puntuacion);
+       }
+       catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
+   }
+
+   [HttpGet("mes/{nroMes}")]
+   public IActionResult GetByMes(int nroMes)
+   {
+       try { return Ok(_service.ObtenerPorMes(nroMes)); }
+       catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
+   }
+
+   [HttpGet("jugador/{jugadorId}/mes/{nroMes}/fecha/{nroFecha}")]
+   public IActionResult GetByJugadorMesFecha(int jugadorId, int nroMes, int nroFecha)
+   {
+       try
+       {
+           var puntuacion = _service.ObtenerPorJugadorMesFecha(jugadorId, nroMes, nroFecha);
+           return puntuacion == null ? NotFound() : Ok(puntuacion);
+       }
+       catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
    }
 
 
@@ -33,15 +68,15 @@ public class PuntuacionController : ControllerBase
    }
 
 
-   [HttpPost("jugador/{jugadorId}/fecha/{nroFecha}")]
-   [HttpPut("jugador/{jugadorId}/fecha/{nroFecha}")]
-   public IActionResult PonerPuntaje(int jugadorId, int nroFecha, [FromBody] decimal nota)
+   [HttpPost("jugador/{jugadorId}/mes/{nroMes}/fecha/{nroFecha}")]
+   public IActionResult PonerPuntaje(int jugadorId, int nroMes, int nroFecha, [FromBody] decimal nota)
    {
        try
        {
            var puntuacion = new Puntuacion
            {
                JugadorId = jugadorId,
+               NroMes = nroMes,
                NroFecha = nroFecha,
                Nota = nota
            };
@@ -69,7 +104,7 @@ public class PuntuacionController : ControllerBase
        }
        catch (MySqlException ex) when (ex.Number == 1062)
        {
-           return Conflict(new { error = "Ese jugador ya tiene una puntuación registrada para esa fecha." });
+           return Conflict(new { error = "Ese jugador ya tiene una puntuación registrada para ese mes y fecha." });
        }
        catch (MySqlException ex) when (ex.Number == 1452)
        {
@@ -78,6 +113,54 @@ public class PuntuacionController : ControllerBase
        catch (Exception)
        {
            return StatusCode(500, new { error = "Ocurrió un error interno al registrar la puntuación." });
+       }
+   }
+
+   [HttpPut("{idPuntuacion}")]
+   public IActionResult Put(int idPuntuacion, [FromBody] Puntuacion puntuacion)
+   {
+       try
+       {
+           ArgumentNullException.ThrowIfNull(puntuacion);
+           puntuacion.IdPuntuacion = idPuntuacion;
+           bool ok = _service.ActualizarPuntuacion(puntuacion);
+           return ok ? Ok(new { message = "Puntuación actualizada con éxito.", puntuacion })
+                     : NotFound(new { error = "No existe la puntuación indicada." });
+       }
+       catch (ArgumentException ex)
+       {
+           return BadRequest(new { error = ex.Message });
+       }
+       catch (MySqlException ex) when (ex.Number == 1062)
+       {
+           return Conflict(new { error = "Ya existe una puntuación para ese jugador, mes y fecha." });
+       }
+       catch (MySqlException ex) when (ex.Number == 1452)
+       {
+           return BadRequest(new { error = "No existe el jugador indicado." });
+       }
+       catch (Exception)
+       {
+           return StatusCode(500, new { error = "Ocurrió un error interno al actualizar la puntuación." });
+       }
+   }
+
+   [HttpDelete("{idPuntuacion}")]
+   public IActionResult Delete(int idPuntuacion)
+   {
+       try
+       {
+           bool ok = _service.BorrarPorId(idPuntuacion);
+           return ok ? Ok(new { message = "Puntuación eliminada con éxito." })
+                     : NotFound(new { error = "No existe la puntuación indicada." });
+       }
+       catch (ArgumentException ex)
+       {
+           return BadRequest(new { error = ex.Message });
+       }
+       catch (Exception)
+       {
+           return StatusCode(500, new { error = "Ocurrió un error interno al eliminar la puntuación." });
        }
    }
 }

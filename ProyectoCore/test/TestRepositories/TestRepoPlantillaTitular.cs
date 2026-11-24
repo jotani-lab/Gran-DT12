@@ -6,7 +6,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoPlantillaTitular
 {
     [MySqlFact]
-    public void AgregarYRemoverTitular_UsaTablaPlantillaTitulares()
+    public void AgregarYRemoverTitular_UsaTablaPlantillaTitular()
     {
         using var db = new TestRepositorioSupport();
         var equipoId = db.CrearEquipo();

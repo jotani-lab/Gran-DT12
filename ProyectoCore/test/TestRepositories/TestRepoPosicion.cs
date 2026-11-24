@@ -6,7 +6,7 @@ namespace ProyectoCore.Test.TestRepositories;
 public class TestRepoPosicion
 {
     [MySqlFact]
-    public void ConsultarPosicion_LeeLaTablaPosiciones()
+    public void ConsultarPosicion_LeeLaTablaPosicion()
     {
         using var db = new TestRepositorioSupport();
         var id = db.CrearPosicion();
