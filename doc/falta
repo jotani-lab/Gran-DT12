@@ -1,5 +1,0 @@
-Tareas para aprobar — COMPLETADAS
-
-- Puntuar a un jugador: POST /api/Puntuacion/jugador/{jugadorId}/mes/{nroMes}/fecha/{nroFecha}; el cuerpo usa PuntuarJugadorRequest.
-- Conexión a datos: IDbConnection se inyecta por request desde Program.cs; se eliminó DBConnection.CreateConnection().
-- Puntaje de titulares: GET /api/Plantilla/{id}/puntaje/mes/{nroMes}/fecha/{nroFecha} suma las notas de los jugadores titulares para ese mes y fecha.
