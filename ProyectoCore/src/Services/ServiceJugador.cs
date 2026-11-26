@@ -35,7 +35,7 @@ public class ServiceJugador
             errores.Add("El equipo no es válido.");
 
         if (jugador.FechaNacimiento == default ||
-            jugador.FechaNacimiento == DateTime.MinValue)
+            jugador.FechaNacimiento == DateOnly.MinValue)
             errores.Add("La fecha de nacimiento no es válida.");
 
         if (jugador.PosicionId <= 0 || jugador.PosicionId > 4)

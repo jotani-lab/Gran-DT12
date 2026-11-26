@@ -35,7 +35,7 @@ public class ServiceUsuario
         else if (usuario.Apellido.Length > 100)
             errores.Add("El apellido no puede superar los 100 caracteres.");
 
-        if (usuario.FechaNacimiento == default || usuario.FechaNacimiento == DateTime.MinValue)
+        if (usuario.FechaNacimiento == default || usuario.FechaNacimiento == DateOnly.MinValue)
             errores.Add("La fecha de nacimiento no es válida.");
 
         if (string.IsNullOrWhiteSpace(usuario.Email))

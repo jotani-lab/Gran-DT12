@@ -16,7 +16,7 @@ public class TestRepoJugador
         {
             Nombre = "Lionel",
             Apellido = "Messi",
-            FechaNacimiento = new DateTime(1987, 6, 24),
+            FechaNacimiento = new DateOnly(1987, 6, 24),
             EquipoId = equipoId,
             PosicionId = posicionId,
             Cotizacion = 75000000.00m

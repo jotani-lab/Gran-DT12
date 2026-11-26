@@ -16,7 +16,7 @@ public class TestRepoUsuario
             Nombre = $"Usuario-{Guid.NewGuid():N}",
             Apellido = "Integracion",
             Email = $"{Guid.NewGuid():N}@example.test",
-            FechaNacimiento = new DateTime(1990, 1, 1),
+            FechaNacimiento = new DateOnly(1990, 1, 1),
             PasswordHash = new string('a', 64)
         };
 
